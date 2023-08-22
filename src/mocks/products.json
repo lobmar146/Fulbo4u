@@ -4,7 +4,7 @@
     "name": "Pelota de Tango que no quería ser pateada",
     "shortDescription": "Una pelota caprichosa que desafiaba los disparos",
     "description": "En un día soleado en Buenos Aires, durante un partido amistoso, esta pelota de Tango demostró tener una personalidad propia. Cada vez que un jugador se acercaba para patearla, la pelota hacía un giro evasivo o saltaba en el aire, esquivando todos los intentos de gol. Los jugadores y el público no pudieron contener la risa ante esta situación surrealista. Finalmente, un delantero astuto se acercó sigilosamente y le susurró palabras de aliento antes de patearla suavemente al gol, dejando a todos boquiabiertos.",
-    "image": "/src/assets/pelota.png",
+    "image": "src/assets/pelota.png",
     "category": 1,
     "caracteristics": [1, 3, 7]
   },
