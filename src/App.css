@@ -1,0 +1,12 @@
+* {
+  font-family: 'League Spartan', sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+}
+
+.content {
+  height: calc(100vh - 248px);
+}
