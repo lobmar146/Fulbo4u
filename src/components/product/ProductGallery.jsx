@@ -110,6 +110,8 @@ const StyledCarousel = styled(Carousel)`
   .carousel .slide {
     background-color: transparent;
     box-shadow: black;
+    display: flex;
+    align-items: center;
   }
 
   .carousel .control-prev,

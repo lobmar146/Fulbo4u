@@ -22,6 +22,9 @@ export default function FormProducto(props) {
   const [galleryImages, setGalleryImages] = useState([])
   const [coverImageError, setCoverImageError] = useState(false)
   const [galleryImageError, setgalleryImageError] = useState(false)
+  //estados para que se visualicen las imagenes hardcodeadas
+  const [coverImagePreview, setCoverImagePreview] = useState(null)
+  const [galleryImagePreviews, setGalleryImagePreviews] = useState([])
 
   // estados de la caracteristicas
   const [selectedCaracteristicas, setSelectedCaracteristicas] = useState([])
@@ -51,13 +54,14 @@ export default function FormProducto(props) {
   const handleGalleryImageChange = e => {
     const files = e.target.files
     setGalleryImagesFiles(files)
+
     if (files.length > 4) {
       toast.error('Solo puedes seleccionar hasta 4 imágenes')
       setGalleryImages([])
       setCoverImageError(true)
     } else if (files.length === 0) {
       toast.error(
-        'El producto debe tener al menos una imagen para su galeria. Selecciona una.'
+        'El producto debe tener al menos una imagen para su galería. Selecciona una.'
       )
       setGalleryImages([])
       setCoverImageError(true)
@@ -65,12 +69,16 @@ export default function FormProducto(props) {
       const newImages = Array.from(files)
       setGalleryImages(newImages)
       setCoverImageError(false)
+
+      const galleryPreviews = newImages.map(image => URL.createObjectURL(image))
+      setGalleryImagePreviews(galleryPreviews)
     }
   }
 
   const handleCoverImageChange = e => {
     const files = e.target.files
     setCoverImageFile(files)
+
     if (files.length > 1) {
       toast.error('Solo puedes seleccionar 1 imagen')
       setCoverImageError(true)
@@ -78,9 +86,10 @@ export default function FormProducto(props) {
       toast.error('El producto debe tener imagen de portada. Selecciona una.')
       setCoverImageError(true)
     } else {
-      const newImage = files[0] // Tomar solo la primera imagen
+      const newImage = files[0]
       setCoverImage(newImage)
       setCoverImageError(false)
+      setCoverImagePreview(URL.createObjectURL(newImage))
     }
   }
 
@@ -169,9 +178,10 @@ export default function FormProducto(props) {
         name: nombre,
         shortDescription: shortDescripcion,
         description: descripcion,
-        category: categoriaID,
-        caracteristicas: selectedCaracteristicasIds,
-        image: [coverImage, ...galleryImages]
+        category: Number(categoriaID),
+        caracteristics: selectedCaracteristicasIds,
+
+        image: [coverImagePreview, ...galleryImagePreviews]
       })
       setNombre('')
       setShortDescripcion('')

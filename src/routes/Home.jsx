@@ -146,7 +146,7 @@ export default function Home() {
               id={producto.id}
               name={producto.name}
               shortDescription={producto.shortDescription}
-              image={producto.image}
+              image={producto.image[0]}
             />
           ))}
         </div>
@@ -204,7 +204,7 @@ export default function Home() {
               id={producto.id}
               name={producto.name}
               shortDescription={producto.shortDescription}
-              image={producto.image}
+              image={producto.image[0]}
             />
           ))}
         </div>

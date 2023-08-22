@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useParams, Link } from 'react-router-dom'
 import { BsFillArrowRightSquareFill } from 'react-icons/bs'
@@ -6,10 +6,34 @@ import { ElementosGlobales } from '../context/ElementosGlobales'
 import ProductGallery from '../components/product/ProductGallery'
 
 export default function DetailProduct() {
-  const { productos } = useContext(ElementosGlobales)
+  const { productos, caracteristicas } = useContext(ElementosGlobales)
+  const [productoPorId, setProductoPorId] = useState(null)
 
   const params = useParams()
-  const productoPorId = productos.find(producto => producto.id == params.id)
+
+  //esto deberia fetchearse a futturo
+
+  useEffect(() => {
+    //esto deberia ser la funcion de fetch, aca ni bien se monta el componente se hacen los siguientes pasos
+
+    //obtengo el producto por id
+    const foundProduct = productos.find(
+      producto => producto.id === Number(params.id)
+    )
+
+    //seteo el producto
+    setProductoPorId(foundProduct)
+  }, [params.id, productos])
+
+  const caracteristicasPorId = idCaracteristica => {
+    return caracteristicas.find(
+      caracteristica => caracteristica.id === idCaracteristica
+    )
+  }
+
+  if (!productoPorId) {
+    return <p>Cargando...</p> // Muestra un mensaje de carga mientras se obtiene el producto
+  }
 
   return (
     <>
@@ -22,15 +46,20 @@ export default function DetailProduct() {
           </Link>
         </div>
         <h2>Galeria de Imagenes del Producto</h2>
-        <ProductGallery
-          images={[
-            productoPorId.image,
-            productoPorId.image,
-            productoPorId.image,
-            productoPorId.image,
-            productoPorId.image
-          ]}
-        />
+        <ProductGallery images={productoPorId.image} />
+        <h2>Caracteristicas del Producto</h2>
+
+        {/* recorro las caracteristicas del producto y las mapeo */}
+        <ul className='caracteristics-ul'>
+          {productoPorId.caracteristics.map(caracteristicaId => {
+            const caracteristica = caracteristicasPorId(caracteristicaId)
+            return (
+              <li key={caracteristicaId} className='caracteristics-li'>
+                {caracteristica.emoji + ' ' + caracteristica.texto}
+              </li>
+            )
+          })}
+        </ul>
       </DetailProductWrapper>
     </>
   )
@@ -57,5 +86,33 @@ const DetailProductWrapper = styled.section`
 
   .link:hover {
     color: #000000;
+  }
+
+  ul.caracteristics-ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: space-between;
+    text-align: center;
+    list-style: none;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    background-color: ${props => props.theme.global.lightGreyF4u} !important;
+    border-radius: 2rem;
+    padding: 1rem;
+    font-weight: bolder;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+  li.caracteristics-li {
+    display: flex;
+    gap: 0.5rem;
+    background-color: ${props => props.theme.global.greyF4u};
+    padding: 1rem 0.5rem;
+    border-radius: 2rem;
+    color: white;
   }
 `

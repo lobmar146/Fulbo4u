@@ -1,4 +1,4 @@
-let id = 40
+let id = 20
 
 export default function generarId() {
   id++
