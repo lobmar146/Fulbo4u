@@ -17,6 +17,11 @@ export default function AdministrarUsuarios() {
   const [documents, setDocuments] = useState([])
 
   const makeAdmin = async id => {
+    const idToast = toast.loading('Por favor espere...', {
+      style: {
+        'font-size': '1.5rem'
+      }
+    })
     try {
       const docId = id // tomamos el id del doc
       const docRef = doc(db, 'usuarios', docId)
@@ -26,7 +31,7 @@ export default function AdministrarUsuarios() {
       })
 
       console.log('Documento modificado con éxito')
-      toast.success('Usuario modificado con éxito')
+      toast.success('Usuario modificado con exito.', { id: idToast })
 
       // Actualizar el estado de documents después de hacer a alguien administrador
       setDocuments(prevDocuments => {
@@ -40,10 +45,16 @@ export default function AdministrarUsuarios() {
       })
     } catch (error) {
       console.error('Error al modificar el documento:', error)
+      toast.error('¡Algo fue mal!', { id: idToast })
     }
   }
 
   const makeUser = async id => {
+    const idToast = toast.loading('Por favor espere...', {
+      style: {
+        'font-size': '1.5rem'
+      }
+    })
     try {
       const docId = id // tomamos el id del doc
       const docRef = doc(db, 'usuarios', docId)
@@ -53,7 +64,12 @@ export default function AdministrarUsuarios() {
       })
 
       console.log('Documento modificado con éxito')
-      toast.success('Usuario modificado con éxito')
+      toast.success('Usuario modificado con exito.', {
+        id: idToast,
+        style: {
+          'font-size': '1.5rem'
+        }
+      })
 
       // Actualizar el estado de documents después de hacer a alguien usuario
       setDocuments(prevDocuments => {
@@ -67,6 +83,12 @@ export default function AdministrarUsuarios() {
       })
     } catch (error) {
       console.error('Error al modificar el documento:', error)
+      toast.error('¡Algo fue mal!', {
+        id: idToast,
+        style: {
+          'font-size': '2rem'
+        }
+      })
     }
   }
 
@@ -89,9 +111,9 @@ export default function AdministrarUsuarios() {
 
   return (
     <SectionAdministracion>
-      <SectionAdministrarProductos>
-        <div className='desktop'>
-          <h2>Documentos en la colección:</h2>
+      <div className='desktop'>
+        <h2>Usuarios de la plataforma:</h2>
+        <SectionAdministrarProductos>
           {documents.length === 0 ? (
             <p>Cargando</p>
           ) : (
@@ -109,16 +131,24 @@ export default function AdministrarUsuarios() {
                   <tr key={document.id}>
                     <td>{document.id}</td>
                     <td>{document.correo}</td>
-                    <td>{document.rol}</td>
+                    <td>
+                      <strong>{document.rol}</strong>
+                    </td>
                     <td>
                       {/* si el rol es admin hacer user */}
                       {document.rol === 'admin' ? (
-                        <button onClick={() => makeUser(document.id)}>
+                        <button
+                          className='button-user'
+                          onClick={() => makeUser(document.id)}
+                        >
                           {' '}
                           Hacer User
                         </button>
                       ) : (
-                        <button onClick={() => makeAdmin(document.id)}>
+                        <button
+                          className='button-admin'
+                          onClick={() => makeAdmin(document.id)}
+                        >
                           {' '}
                           Hacer Admin
                         </button>
@@ -129,19 +159,20 @@ export default function AdministrarUsuarios() {
               </tbody>
             </TablaProductos>
           )}
-        </div>
-        <div className='mobile content'>
-          <h1>
-            Por favor, ingresa en un dispotivo de escritorio para administrar el
-            sitio
-          </h1>
-        </div>
-        <Toaster position='top-center' reverseOrder={false} />
-      </SectionAdministrarProductos>
+        </SectionAdministrarProductos>
+      </div>
+      <div className='mobile content'>
+        <h1>
+          Por favor, ingresa en un dispotivo de escritorio para administrar el
+          sitio
+        </h1>
+      </div>
+      <Toaster position='top-center' reverseOrder={false} />
     </SectionAdministracion>
   )
 }
 const TablaProductos = styled.table`
+  margin-bottom: 2rem;
   width: 90%;
   border-collapse: collapse;
   border: 1px solid black;
@@ -154,10 +185,30 @@ const TablaProductos = styled.table`
     padding: 0.5rem;
     text-align: center;
     button {
-      margin: 0 0.5rem;
+      margin: 0.2rem; // Add some margin to buttons
+      padding: 6px 12px; // Adjust padding for buttons
+
+      font-size: 1rem;
+      color: white;
+      background-color: ${props => props.theme.global.greyF4u};
+      transition: background-color 0.6s;
+      border-radius: 2rem;
+      cursor: pointer;
+    }
+    button.button-user {
+      background-color: ${props => props.theme.global.redF4u};
     }
 
-    font-size: 1.5rem;
+    font-size: 1rem; // Adjust font size for cells
+
+    @media (max-width: 768px) {
+      font-size: 0.8rem; // Adjust font size for smaller screens
+      padding: 0.3rem; // Adjust padding for smaller screens
+      button {
+        padding: 4px 8px; // Adjust padding for smaller screens
+        font-size: 0.9rem; // Adjust font size for smaller screens
+      }
+    }
   }
 `
 const SectionAdministrarProductos = styled.section`

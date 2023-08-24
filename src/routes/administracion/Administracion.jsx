@@ -47,6 +47,8 @@ export default function Administracion() {
 }
 
 export const SectionAdministracion = styled.section`
+  position: relative; /* Add this to enable absolute positioning */
+  min-height: 100vh; /* Set a minimum height to ensure footer stays at bottom */
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -63,6 +65,9 @@ export const SectionAdministracion = styled.section`
   }
 
   .desktop {
+    h2 {
+      margin-left: 2rem;
+    }
     button {
       margin: 2rem;
     }
@@ -96,8 +101,20 @@ export const SectionAdministracion = styled.section`
   }
 
   .section-tabla-productos {
+    /* Remove the height rule to allow content to expand */
     display: flex;
     justify-content: center;
+    align-items: center; /* Center vertically */
     margin-bottom: 2rem;
+    position: relative; /* Enable relative positioning for the footer */
+  }
+
+  .section-tabla-productos::after {
+    content: ''; /* Create an empty element */
+    position: absolute;
+    bottom: 0; /* Stick to the bottom */
+    left: 0;
+    width: 100%;
+    height: 20px; /* Set a height for the footer */
   }
 `

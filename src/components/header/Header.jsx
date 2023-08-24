@@ -21,11 +21,9 @@ export default function Header() {
   const handleClick = () => {
     setClicked(!clicked)
   }
-
   const closeMenu = () => {
     setClicked(false)
   }
-
   const userSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -68,6 +66,7 @@ export default function Header() {
                 ) : null}
                 <Link
                   onClick={() => {
+                    closeMenu()
                     userSignOut()
                   }}
                   to='/'

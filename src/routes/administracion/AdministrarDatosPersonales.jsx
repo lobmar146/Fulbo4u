@@ -23,6 +23,11 @@ export default function AdministrarDatosPersonales() {
   }, [userData])
 
   const handleModificar = async e => {
+    const idToast = toast.loading('Por favor espere...', {
+      style: {
+        'font-size': '1.5rem'
+      }
+    })
     e.preventDefault()
     try {
       if (userData) {
@@ -42,10 +47,11 @@ export default function AdministrarDatosPersonales() {
         })
 
         console.log('Documento modificado con éxito')
-        toast.success('Datos modificados con éxito')
+        toast.success('Usuario modificado con exito.', { id: idToast })
       }
     } catch (error) {
       console.error('Error al modificar el documento:', error)
+      toast.error('¡Algo fue mal!', { id: idToast })
     }
   }
 
@@ -128,6 +134,10 @@ const Form = styled.form`
     background-color: ${props => props.theme.global.greyF4u};
     transition: color 0.6s;
     border-radius: 2rem;
+  }
+  button:hover {
+    transition: background-color 0.6s;
+    background-color: black;
   }
 
   /* contenedor que tiene el select y el boton */

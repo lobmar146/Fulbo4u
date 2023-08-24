@@ -8,7 +8,8 @@ import { Modal } from './Modal'
 import toast, { Toaster } from 'react-hot-toast'
 
 export default function AdministrarCaracteristicas() {
-  const { caracteristicas } = useContext(ElementosGlobales)
+  const { caracteristicas, eliminarCaracteristica } =
+    useContext(ElementosGlobales)
 
   // funciones del modal
   const [showmodal, setshowmodal] = useState(false)
@@ -47,7 +48,9 @@ export default function AdministrarCaracteristicas() {
                       <AiFillEdit />
                     </BotonEditar>
 
-                    <BotonEliminar>
+                    <BotonEliminar
+                      onClick={() => eliminarCaracteristica(caracteristica.id)}
+                    >
                       <AiFillDelete />
                     </BotonEliminar>
                   </td>

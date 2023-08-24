@@ -82,7 +82,8 @@ export default function ElementosGlobalesProvider(props) {
   }
 
   function eliminarProducto(id) {
-    setProductos(productos.filter(producto => producto.id !== id))
+    const aux = productos.filter(producto => producto.id !== id)
+    setProductos(aux)
   }
 
   function cambiarLoggeo() {
@@ -91,6 +92,13 @@ export default function ElementosGlobalesProvider(props) {
 
   function agregarCaracteristica(caracteristica) {
     setCaracteristicas([...caracteristicas, caracteristica])
+  }
+
+  function eliminarCaracteristica(id) {
+    const aux = caracteristicas.filter(
+      caracteristica => caracteristica.id !== id
+    )
+    setCaracteristicas(aux)
   }
 
   const valoresGlobales = {
@@ -102,6 +110,7 @@ export default function ElementosGlobalesProvider(props) {
     userData,
     setUserData,
     agregarCaracteristica,
+    eliminarCaracteristica,
     cambiarLoggeo,
     agregarProducto,
     eliminarProducto

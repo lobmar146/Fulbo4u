@@ -11,7 +11,7 @@ export default function AgregarProducto() {
       <div className='desktop'>
         <h1>Agregar Producto</h1>
         <FormProducto />
-        <button onClick={() => navigate('/administracion')}>
+        <button className='button' onClick={() => navigate('/administracion')}>
           Volver al panel de admin
         </button>
       </div>

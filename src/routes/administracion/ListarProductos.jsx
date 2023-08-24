@@ -6,7 +6,7 @@ import { ElementosGlobales } from '../../context/ElementosGlobales'
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai'
 
 export default function ListarProductos() {
-  const { productos } = useContext(ElementosGlobales)
+  const { productos, eliminarProducto } = useContext(ElementosGlobales)
 
   return (
     <SectionAdministracion className='section-ListarProductos'>
@@ -32,7 +32,9 @@ export default function ListarProductos() {
                       <AiFillEdit />
                     </BotonEditar>
 
-                    <BotonEliminar>
+                    <BotonEliminar
+                      onClick={() => eliminarProducto(producto.id)}
+                    >
                       <AiFillDelete />
                     </BotonEliminar>
                   </td>
