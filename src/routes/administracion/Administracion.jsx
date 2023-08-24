@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export default function Administracion() {
   const navigate = useNavigate()
   return (
-    <SectionAdministracion className='section-administracion content'>
+    <SectionAdministracion className='section-administracion '>
       <div className='desktop'>
         <h1>Administracion</h1>
         <div className='contendor-botones'>
@@ -27,6 +27,12 @@ export default function Administracion() {
             }
           >
             Administrar Caracteristicas
+          </button>
+          <button
+            className='button'
+            onClick={() => navigate('/administracion/administrarUsuarios')}
+          >
+            Administrar Usuarios
           </button>
         </div>
       </div>
@@ -67,6 +73,7 @@ export const SectionAdministracion = styled.section`
 
   .contendor-botones {
     display: flex;
+
     flex-direction: column;
     padding: 20px;
     box-sizing: border-box;

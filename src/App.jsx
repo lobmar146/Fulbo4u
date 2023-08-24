@@ -6,12 +6,15 @@ import Home from './routes/Home'
 import DetailProduct from './routes/DetailProduct'
 import Footer from './components/footer/Footer'
 import ElementosGlobalesProvider from './context/ElementosGlobales'
-import IniciarSesion from './routes/IniciarSesion'
+import IniciarSesion from './routes/login/IniciarSesion'
+import Registrarse from './routes/login/Registrarse'
 import Administracion from './routes/administracion/Administracion'
 import AgregarProducto from './routes/administracion/AgregarProducto'
 import ListarProductos from './routes/administracion/ListarProductos'
 import { ThemeProvider } from 'styled-components'
 import AdministrarCaracteristicas from './routes/administracion/AdministrarCaracteristicas'
+import AdministrarDatosPersonales from './routes/administracion/AdministrarDatosPersonales'
+import AdministrarUsuarios from './routes/administracion/AdministrarUsuarios'
 
 const theme = {
   global: {
@@ -41,6 +44,7 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/product/:id' element={<DetailProduct />} />
             <Route path='/iniciarsesion' element={<IniciarSesion />} />
+            <Route path='/registrarse' element={<Registrarse />} />
             <Route path='/administracion' element={<Administracion />} />
             <Route
               path='/administracion/agregarproducto'
@@ -53,6 +57,14 @@ function App() {
             <Route
               path='/administracion/administrarCaracteristicas'
               element={<AdministrarCaracteristicas />}
+            />
+            <Route
+              path='/administracion/administrarDatosPersonales'
+              element={<AdministrarDatosPersonales />}
+            />
+            <Route
+              path='administracion/administrarUsuarios'
+              element={<AdministrarUsuarios />}
             />
           </Routes>
         </main>

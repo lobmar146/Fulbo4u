@@ -1,6 +1,17 @@
 import { createContext, useState, useMemo } from 'react'
+import { useEffect } from 'react'
+
 import products from '../mocks/products.json'
 import tags from '../mocks/tags.json'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import {
+  getFirestore,
+  doc,
+  collection,
+  setDoc,
+  getDoc
+} from 'firebase/firestore'
+import { app } from '../firebase'
 
 export const ElementosGlobales = createContext({})
 
@@ -9,8 +20,47 @@ export default function ElementosGlobalesProvider(props) {
   const [logged, setLogged] = useState(false)
   const [productos, setProductos] = useState(products)
   const [caracteristicas, setCaracteristicas] = useState(tags)
-  // Función para reorganizar el array de productos de manera aleatoria
 
+  const [user, setUser] = useState(null)
+  const [userData, setUserData] = useState({ uid: '', email: '', rol: '' })
+  const firestore = getFirestore(app)
+
+  async function getUserData(uid) {
+    const docuRef = doc(firestore, `usuarios/${uid}`)
+    const docuCifrada = await getDoc(docuRef)
+    const userData = docuCifrada.data()
+    return userData
+  }
+
+  useEffect(() => {
+    const auth = getAuth()
+    const unsubscribe = onAuthStateChanged(auth, async user => {
+      if (user) {
+        setUser(user)
+      } else {
+        setUser(null)
+        setUserData(null)
+      }
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      getUserData(user.uid)
+        .then(userData => {
+          setUserData({
+            ...userData,
+            uid: user.uid
+          })
+          console.log('userData final', userData)
+        })
+        .catch(error => {
+          console.log('Error fetching user data:', error)
+        })
+    }
+  }, [user])
   // Reorganizar los productos de manera aleatoria
 
   const shuffleArray = array => {
@@ -48,6 +98,9 @@ export default function ElementosGlobalesProvider(props) {
     productos,
     productosAleatorios,
     caracteristicas,
+    user,
+    userData,
+    setUserData,
     agregarCaracteristica,
     cambiarLoggeo,
     agregarProducto,

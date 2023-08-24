@@ -112,6 +112,7 @@ const StyledCarousel = styled(Carousel)`
     box-shadow: black;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   .carousel .control-prev,
@@ -149,7 +150,7 @@ const ModalContent = styled.div`
   padding: 20px;
   /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); */
   z-index: 1001;
-  width: 40%;
+  width: 30%;
   @media (max-width: 768px) {
     width: 80%;
   }

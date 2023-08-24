@@ -14,7 +14,7 @@ export default function ListarProductos() {
       <div className='desktop '>
         <h1>Listar productos</h1>
         <section className='section-tabla-productos'>
-          <TablaProductos class>
+          <TablaProductos>
             <thead>
               <tr>
                 <th>ID</th>

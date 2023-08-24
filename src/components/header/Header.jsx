@@ -1,64 +1,97 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { useState } from 'react'
-import { GiSoccerBall } from 'react-icons/gi'
+import { useState, useEffect } from 'react'
 import BurguerButton from './BurgerButton'
 import { ElementosGlobales } from '../../context/ElementosGlobales'
 import { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/Futbol4u-logo.svg'
+import { signOut } from 'firebase/auth'
+import { auth } from '../../firebase'
 
 export default function Header() {
-  const { logged, cambiarLoggeo } = useContext(ElementosGlobales)
+  const { user, userData } = useContext(ElementosGlobales)
   const [clicked, setClicked] = useState(false)
-  const navigate = useNavigate()
+
+  const [localUserData, setLocalUserData] = useState(userData)
+
+  useEffect(() => {
+    setLocalUserData(userData)
+  }, [userData])
 
   const handleClick = () => {
     setClicked(!clicked)
   }
+
+  const closeMenu = () => {
+    setClicked(false)
+  }
+
+  const userSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        console.log('sign out successful')
+      })
+      .catch(error => console.log(error))
+  }
   return (
     <HeaderWrapper>
       {/* Contenedor logo del header */}
-
-      {/* logo */}
       <Link to='/'>
         <div className='contenedor-logo'>
           <img className='logo' src={logo} alt='logo' />
-
           <h1>FULBO4U</h1>
         </div>
       </Link>
-
-      {/* Contenedor de los botones */}
       <div className={`nav-container ${clicked ? 'active' : ''}`}>
-        {logged ? (
+        {user ? (
           <>
-            <span>¡Bienvenido Admin!</span>
-            <Link to='/administracion'>Administrar Productos </Link>
-            <Link
-              onClick={() => {
-                cambiarLoggeo()
-              }}
-              to='/'
-            >
-              Cerrar Sesion
-            </Link>
+            {localUserData ? (
+              <>
+                <span>¡Bienvenido {localUserData.nombre}!</span>
+                {user.emailVerified ? (
+                  localUserData ? (
+                    localUserData.rol === 'admin' ? (
+                      <Link onClick={closeMenu} to='/administracion'>
+                        Panel de Admin
+                      </Link>
+                    ) : (
+                      <Link
+                        onClick={closeMenu}
+                        to='/administracion/administrarDatosPersonales'
+                      >
+                        Administrar Datos Personales
+                      </Link>
+                    )
+                  ) : (
+                    <span>Cargando...</span>
+                  )
+                ) : null}
+                <Link
+                  onClick={() => {
+                    userSignOut()
+                  }}
+                  to='/'
+                >
+                  Cerrar Sesión
+                </Link>
+              </>
+            ) : (
+              <span>Cargando...</span>
+            )}
           </>
         ) : (
           <>
             <div className='buttons-container'>
-              {' '}
-              <Link to='/' className='button'>
+              <Link onClick={closeMenu} to='/registrarse' className='button'>
                 Crear Cuenta
               </Link>
-              <Link to='/iniciarsesion' className='button'>
+              <Link onClick={closeMenu} to='/iniciarsesion' className='button'>
                 Iniciar Sesión
               </Link>
             </div>
           </>
         )}
       </div>
-
       <div className='burger'>
         <BurguerButton clicked={clicked} handleClick={handleClick} />
       </div>
@@ -81,7 +114,9 @@ const HeaderWrapper = styled.header`
   left: 0;
   width: 100%;
   background-color: ${props => props.theme.global.redF4u};
-
+  p {
+    color: white;
+  }
   .logo {
     width: 100%;
     height: 3.5rem;
@@ -105,7 +140,7 @@ const HeaderWrapper = styled.header`
     top: -700px;
     left: -2000px;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: 2rem;
     text-align: center;
     a {
       color: black;
@@ -114,8 +149,10 @@ const HeaderWrapper = styled.header`
     }
     /* media query que trae el nav a posicion in */
     @media (min-width: 768px) {
+      display: flex;
+      align-items: center;
       position: initial;
-      margin: 0;
+      margin: 0.5rem;
       a {
         display: inline;
         color: white;

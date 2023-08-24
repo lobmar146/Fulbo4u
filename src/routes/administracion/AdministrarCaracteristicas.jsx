@@ -75,7 +75,7 @@ const ContenedorBotones = styled.div`
   width: 97%;
 `
 
-const TablaProductos = styled.table`
+export const TablaProductos = styled.table`
   width: 90%;
   border-collapse: collapse;
   border: 1px solid black;
@@ -94,7 +94,7 @@ const TablaProductos = styled.table`
     font-size: 1.5rem;
   }
 `
-const BotonEditar = styled.button`
+export const BotonEditar = styled.button`
   svg {
     font-size: 3rem;
     color: #787878;

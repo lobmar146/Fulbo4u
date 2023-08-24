@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { ElementosGlobales } from '../context/ElementosGlobales'
 import {
@@ -10,66 +10,25 @@ import { BsFillFilterSquareFill } from 'react-icons/bs'
 import { Product } from '../components/product/Product'
 
 // imports de imagens'
-import cancha from '../assets/cancha.png'
+
 import jugadores from '../assets/jugadores.png'
 import logo from '../assets/Futbol4u-logo.svg'
-import pelota from '../assets/pelota.png'
-import clases from '../assets/clases.png'
-import alquilar from '../assets/alquilar.png'
-import inteligentes from '../assets/inteligentes.png'
-import sintetico from '../assets/sintetico.png'
-import botines from '../assets/botines.png'
+
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function Home() {
   const productsPerPage = 10
-  const { productos, productosAleatorios } = useContext(ElementosGlobales)
+  const { productos, productosAleatorios, user } = useContext(ElementosGlobales)
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPagerRecomendation, setCurrentPageRecomendation] = useState(1)
+  const [currentPagerCategory, setCurrentPagerCategory] = useState(1)
   const [filtroCategoria, setFiltroCategoria] = useState('todos')
 
   const filtroCategoriaChange = e => {
+    setCurrentPagerCategory(1)
     setFiltroCategoria(e.target.value)
     console.log(filtroCategoria)
   }
-
-  //Al comenzar desde current page, se multiplica por la cantidad de productos por pagina
-  // Como productos por page es 10, la primera pagina termina va a terminar en el 10
-  // Como la pagina 1 termina en el 10, el primer producto de la pagina 2 es el 11
-  // Y asi suceivamente
-  const indexOfLastProduct = currentPage * productsPerPage
-
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage
-
-  const handlePageChange = direction => {
-    if (direction === 'prev' && currentPage > 1) {
-      setCurrentPage(currentPage - 1)
-    } else if (
-      direction === 'next' &&
-      indexOfLastProduct < productosAleatorios.length
-    ) {
-      setCurrentPage(currentPage + 1)
-    }
-  }
-
-  //agrega un arreglo los numeros de pagina para despues poder ponerlos en el paginador con un map
-  const generatePageNumbers = () => {
-    const pageNumbers = []
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i)
-    }
-    return pageNumbers
-  }
-  // const productosAleatorios = useMemo(
-  //   () => shuffleArray(productos),
-  //   [productos]
-  // )
-  const currentProducts = productosAleatorios.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  )
-  //Total de productos, y cantidad total de paginas
-  const totalProducts = productosAleatorios.length
-  const totalPages = Math.ceil(totalProducts / productsPerPage)
 
   const productosFiltrados = productos.filter(producto => {
     if (filtroCategoria === 'todos') {
@@ -83,11 +42,93 @@ export default function Home() {
     }
   })
 
-  useEffect(() => {}, [])
+  //Al comenzar desde current page, se multiplica por la cantidad de productos por pagina
+  // Como productos por page es 10, la primera pagina termina va a terminar en el 10
+  // Como la pagina 1 termina en el 10, el primer producto de la pagina 2 es el 11
+  // Y asi suceivamente
+  const indexOfLastProductRecomendation =
+    currentPagerRecomendation * productsPerPage
+
+  const indexOfFirstProductRecomendation =
+    indexOfLastProductRecomendation - productsPerPage
+
+  const indexOfLastProducCategory = currentPagerCategory * productsPerPage
+
+  const indexOfFirstProductCategory =
+    indexOfLastProducCategory - productsPerPage
+
+  const handlePageChangeRecomendation = direction => {
+    if (direction === 'prev' && currentPagerRecomendation > 1) {
+      setCurrentPageRecomendation(currentPagerRecomendation - 1)
+    } else if (
+      direction === 'next' &&
+      indexOfLastProductRecomendation < productosAleatorios.length
+    ) {
+      setCurrentPageRecomendation(currentPagerRecomendation + 1)
+    }
+  }
+  const handlePageChangeCategory = direction => {
+    if (direction === 'prev' && currentPagerCategory > 1) {
+      setCurrentPagerCategory(currentPagerCategory - 1)
+    } else if (
+      direction === 'next' &&
+      indexOfLastProducCategory < productos.length
+    ) {
+      setCurrentPagerCategory(currentPagerCategory + 1)
+    }
+  }
+
+  //agrega un arreglo los numeros de pagina para despues poder ponerlos en el paginador con un map
+  const generatePageNumbersRecomendation = () => {
+    const pageNumbers = []
+    for (let i = 1; i <= totalPagesRecomendation; i++) {
+      pageNumbers.push(i)
+    }
+    return pageNumbers
+  }
+
+  const generatePageNumbersCategory = () => {
+    const pageNumbers = []
+    for (let i = 1; i <= totalPagesCategory; i++) {
+      pageNumbers.push(i)
+    }
+    return pageNumbers
+  }
+
+  const currentProducts = productosAleatorios.slice(
+    indexOfFirstProductRecomendation,
+    indexOfLastProductRecomendation
+  )
+
+  const currentProductsCategory = productosFiltrados.slice(
+    indexOfFirstProductCategory,
+    indexOfLastProducCategory
+  )
+  //Total de productos, y cantidad total de paginas
+  const totalProductsRecomendation = productosAleatorios.length
+  const totalPagesRecomendation = Math.ceil(
+    totalProductsRecomendation / productsPerPage
+  )
+
+  const totalProductsCategory = productosFiltrados.length
+  const totalPagesCategory = Math.ceil(totalProductsCategory / productsPerPage)
+
   return (
     <SectionHome>
       {/* Section del buscador */}
       <section className='searcher'>
+        {user && !user.emailVerified && (
+          <VertifiqueSuCuenta>
+            Verifique su cuenta para tener mas funcionalidades
+            {toast(' Verifique su cuenta para tener mas funcionalidades', {
+              icon: '📧',
+              style: {
+                'font-size': '1.5rem'
+              }
+            })}
+          </VertifiqueSuCuenta>
+        )}
+
         <SearchBar>
           <div className='search'>
             <AiOutlineSearch className='icon' />
@@ -138,9 +179,9 @@ export default function Home() {
           </div>
         </div>
         <div className='products-container'>
-          {console.log(currentProducts)}
+          {console.log(currentProductsCategory)}
 
-          {productosFiltrados.map(producto => (
+          {currentProductsCategory.map(producto => (
             <Product
               key={producto.id}
               id={producto.id}
@@ -152,35 +193,35 @@ export default function Home() {
         </div>
         <div className='pagination'>
           <button
-            className={currentPage === 1 ? 'disabled' : 'enabled'}
-            onClick={() => handlePageChange('prev')}
-            disabled={currentPage === 1}
+            className={currentPagerCategory === 1 ? 'disabled' : 'enabled'}
+            onClick={() => handlePageChangeCategory('prev')}
+            disabled={currentPagerCategory === 1}
           >
             <AiOutlineArrowLeft></AiOutlineArrowLeft>
           </button>
-          {generatePageNumbers().map(pageNumber => (
+          {generatePageNumbersCategory().map(pageNumber => (
             <button
               key={pageNumber}
               className={
-                (currentPage === pageNumber ? 'active' : 'enabled') +
+                (currentPagerCategory === pageNumber ? 'active' : 'enabled') +
                 ' page-number'
               }
-              onClick={() => setCurrentPage(pageNumber)}
+              onClick={() => setCurrentPagerCategory(pageNumber)}
             >
               {pageNumber}
             </button>
           ))}
           <button
             className={
-              currentProducts.length !== productsPerPage ||
-              indexOfLastProduct >= productosAleatorios.length
+              currentProductsCategory.length !== productsPerPage ||
+              indexOfLastProducCategory >= productosFiltrados.length
                 ? 'disabled'
                 : 'enabled'
             }
-            onClick={() => handlePageChange('next')}
+            onClick={() => handlePageChangeCategory('next')}
             disabled={
-              currentProducts.length !== productsPerPage ||
-              indexOfLastProduct >= productosAleatorios.length
+              currentProductsCategory.length !== productsPerPage ||
+              indexOfLastProducCategory >= productosFiltrados.length
             }
           >
             {' '}
@@ -188,7 +229,7 @@ export default function Home() {
           </button>
         </div>
       </section>
-
+      {/* recomendaciones  */}
       <section className='recommendations'>
         <div className='title-container'>
           <div className='titulo-categoria'>
@@ -210,20 +251,21 @@ export default function Home() {
         </div>
         <div className='pagination'>
           <button
-            className={currentPage === 1 ? 'disabled' : 'enabled'}
-            onClick={() => handlePageChange('prev')}
-            disabled={currentPage === 1}
+            className={currentPagerRecomendation === 1 ? 'disabled' : 'enabled'}
+            onClick={() => handlePageChangeRecomendation('prev')}
+            disabled={currentPagerRecomendation === 1}
           >
             <AiOutlineArrowLeft></AiOutlineArrowLeft>
           </button>
-          {generatePageNumbers().map(pageNumber => (
+          {generatePageNumbersRecomendation().map(pageNumber => (
             <button
               key={pageNumber}
               className={
-                (currentPage === pageNumber ? 'active' : 'enabled') +
-                ' page-number'
+                (currentPagerRecomendation === pageNumber
+                  ? 'active'
+                  : 'enabled') + ' page-number'
               }
-              onClick={() => setCurrentPage(pageNumber)}
+              onClick={() => setCurrentPageRecomendation(pageNumber)}
             >
               {pageNumber}
             </button>
@@ -231,14 +273,14 @@ export default function Home() {
           <button
             className={
               currentProducts.length !== productsPerPage ||
-              indexOfLastProduct >= productosAleatorios.length
+              indexOfLastProductRecomendation >= productosAleatorios.length
                 ? 'disabled'
                 : 'enabled'
             }
-            onClick={() => handlePageChange('next')}
+            onClick={() => handlePageChangeRecomendation('next')}
             disabled={
               currentProducts.length !== productsPerPage ||
-              indexOfLastProduct >= productosAleatorios.length
+              indexOfLastProductRecomendation >= productosAleatorios.length
             }
           >
             {' '}
@@ -246,6 +288,7 @@ export default function Home() {
           </button>
         </div>
       </section>
+      <Toaster position='top-center' reverseOrder={false} />
     </SectionHome>
   )
 }
@@ -507,4 +550,11 @@ const SearchBar = styled.div`
   padding-left: 2rem;
   padding-right: 2rem;
   flex-wrap: wrap;
+`
+const VertifiqueSuCuenta = styled.p`
+  color: white;
+  background-color: ${props => props.theme.global.redF4u};
+  border: 2px solid white;
+  border-style: dotted;
+  padding: 1rem;
 `

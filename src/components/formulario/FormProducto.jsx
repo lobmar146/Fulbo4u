@@ -407,7 +407,7 @@ export default function FormProducto(props) {
   )
 }
 
-const Form = styled.form`
+export const Form = styled.form`
   font-size: 1.5rem;
   margin: 0rem 2rem;
   display: flex;
