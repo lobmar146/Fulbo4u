@@ -8,61 +8,73 @@ import { useContext } from 'react'
 import { ElementosGlobales } from '../../context/ElementosGlobales'
 import toast, { Toaster } from 'react-hot-toast'
 
+import axios from 'axios'
+
 export const Modal = props => {
-  const emojis = [
-    '♿️',
-    '🛠️',
-    '🏛️',
-    '🚻',
-    '🔌',
-    '🌞',
-    '🌳',
-    '🏞️',
-    '🏕️',
-    '🌄',
-    '🚴',
-    '⚽',
-    '🏀',
-    '🎾',
-    '🏊',
-    '🏋️',
-    '🏃‍♂️',
-    '🔄'
-  ]
-  const [selectedEmoji, setSelectedEmoji] = useState('♿️')
-  const [selectedText, setSelectedText] = useState('')
-  const handleEmojiChange = event => {
-    setSelectedEmoji(event.target.value)
-    console.log(selectedEmoji)
+  const [converImageFile, setCoverImageFile] = useState([])
+  const [coverImageError, setCoverImageError] = useState(false)
+  const [name, setName] = useState('')
+  const [detail, setDetail] = useState('')
+
+  const handleNameChange = event => {
+    setName(event.target.value)
+  }
+  const handleDetailChange = event => {
+    setDetail(event.target.value)
   }
 
-  //Post caracteristica a el endpoint http://18.208.174.132:8080/api/caracteristicas
-  async function postCaracteristica(caracteristica) {
-    const body = {
-      emoji: selectedEmoji,
-      name: selectedText
+  const handleCoverImageChange = e => {
+    const files = e.target.files
+
+    if (files.length > 1) {
+      toast.error('Solo puedes seleccionar 1 imagen')
+      setCoverImageError(true)
+    } else if (files.length === 0) {
+      toast.error('El producto debe tener imagen de portada. Selecciona una.')
+      setCoverImageError(true)
+    } else {
+      const newImage = files[0]
+      setCoverImageFile(newImage)
+      setCoverImageError(false)
     }
-    const response = await fetch(
-      'http://18.208.174.132:8080/api/caracteristicas',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
+  }
+
+  //Post categoria a el endpoint http://18.208.174.132:8080/api/category/create-category
+  async function postCategoria() {
+    const idToast = toast.loading(`Agregando la categoria ${name}...`, {
+      style: {
+        'font-size': '1.5rem'
       }
-    )
-    const data = await response.json()
-    console.log(data)
-    getCaracteristicas()
+    })
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('imageFiles', converImageFile)
+    formData.append('detail', detail)
+
+    try {
+      const response = await axios.post(
+        'http://18.208.174.132:8080/api/category/create-category',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
+      console.log(response.data)
+      toast.success('¡Producto agregado correctamente', { id: idToast })
+    } catch (error) {
+      console.log(error)
+      toast.error('Surgio el siguiente error agregando productos', {
+        id: idToast
+      })
+    }
+
+    getCategorias()
   }
 
-  const { getCaracteristicas } = useContext(ElementosGlobales)
+  const { categorias, getCategorias } = useContext(ElementosGlobales)
 
-  const handleTextChange = event => {
-    setSelectedText(event.target.value)
-    console.log(selectedText)
-  }
   const { showmodal, setshowmodal } = props
   const modalRef = useRef()
 
@@ -97,7 +109,19 @@ export const Modal = props => {
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (!selectedText || selectedText.length <= 3) {
+    if (!converImageFile) {
+      toast.error('Debe seleccionar una imagen de portada para el producto.', {
+        style: {
+          'font-size': '1.5rem'
+        }
+      })
+    } else if (converImageFile.length > 1) {
+      toast.error('Solo puedes seleccionar 1 imagen', {
+        style: {
+          'font-size': '2rem'
+        }
+      })
+    } else if (!name || name.length <= 3) {
       toast.error(
         'Debe ingresar un nombre para la caracteristica de al menos 3 caracteres',
         {
@@ -106,15 +130,21 @@ export const Modal = props => {
           }
         }
       )
-    } else {
-      postCaracteristica()
-      toast.success('Caracteristica agregada correctamente.', {
-        style: {
-          'font-size': '1.5rem'
+    } else if (!detail || detail.length <= 3) {
+      toast.error(
+        'Debe ingresar un detalle para la caracteristica de al menos 3 caracteres',
+        {
+          style: {
+            'font-size': '1.5rem'
+          }
         }
-      })
+      )
+    } else {
+      postCategoria()
+
       setshowmodal(false)
-      setSelectedText('')
+      setName('')
+      setDetail('')
     }
   }
 
@@ -126,36 +156,48 @@ export const Modal = props => {
             <ModalWrapper showmodal={showmodal}>
               {/* <ModalImg src={require('./modal.jpg')} alt='camera' /> */}
               <ModalContent>
-                <h2>Agregar una nueva caracteristica</h2>
+                <h2>Agregar una nueva Categoria</h2>
                 {/* formulario para agregar una caracteristica con los campos emoji y texto y un boton para enviar esos datos */}
-                <h3>Selecciona el emoji y texto de la nueva categoria</h3>
+                <h3>
+                  Selecciona la imagen, el nombre y el detalle de la categoria
+                </h3>
                 <form>
                   <ContenedorVertical>
-                    <label htmlFor='emojiSelect'> Elija su emoji</label>
-                    <select
-                      id='emojiSelect'
-                      value={selectedEmoji}
-                      onChange={handleEmojiChange}
-                    >
-                      {emojis.map(emoji => (
-                        <option key={emoji} value={emoji}>
-                          {emoji}
-                        </option>
-                      ))}
-                    </select>
+                    <label htmlFor='imageInput'>
+                      Seleccione una (1) imágen de portada del producto
+                    </label>
+                    <input
+                      id='imageInput'
+                      type='file'
+                      accept='image/*'
+                      multiple
+                      onChange={handleCoverImageChange}
+                    />
+                    {console.log(converImageFile[0])}
                   </ContenedorVertical>
                   <ContenedorVertical>
-                    <label htmlFor='texto'>
-                      Elija el nombre de la caracteristica
+                    <label htmlFor='name'>
+                      Elija el nombre de la Categoria
                     </label>
                     <input
                       type='text'
-                      id='texto'
-                      name='texto'
-                      value={selectedText}
-                      onChange={handleTextChange}
+                      id='name'
+                      name='name'
+                      value={name}
+                      onChange={handleNameChange}
+                    />
+                    <label htmlFor='detail'>
+                      Elija la descripción de la Categoria
+                    </label>
+                    <input
+                      type='text'
+                      id='detail'
+                      name='detail'
+                      value={detail}
+                      onChange={handleDetailChange}
                     />
                   </ContenedorVertical>
+
                   <button
                     onClick={handleSubmit}
                     type='submit'
@@ -235,9 +277,10 @@ const ModalContent = styled.div`
   }
   form {
     display: flex;
+    flex-direction: column;
     text-align: center;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     gap: 1.5rem;
     font-size: 3rem;
     background-color: ${props => props.theme.global.lightGreyF4u} !important;

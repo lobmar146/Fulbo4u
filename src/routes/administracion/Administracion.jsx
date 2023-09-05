@@ -34,6 +34,12 @@ export default function Administracion() {
           >
             Administrar Usuarios
           </button>
+          <button
+            className='button'
+            onClick={() => navigate('/administracion/administrarCategorias')}
+          >
+            Administrar Categorias
+          </button>
         </div>
       </div>
       <div className='mobile'>

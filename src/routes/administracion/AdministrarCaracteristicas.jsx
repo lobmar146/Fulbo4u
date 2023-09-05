@@ -8,10 +8,38 @@ import { Modal } from './Modal'
 import toast, { Toaster } from 'react-hot-toast'
 
 export default function AdministrarCaracteristicas() {
-  const { caracteristicas, eliminarCaracteristica } =
+  const { caracteristicas, eliminarCaracteristica, getCaracteristicas } =
     useContext(ElementosGlobales)
 
   // funciones del modal
+
+  //eliminar caractersitica al endpoint http://18.208.174.132:8080/api/caracteristicas/:id
+  async function deleteCaracteristica(id) {
+    const idToast = toast.loading(
+      'Por favor espere... Borrando la caracteristica',
+      {
+        style: {
+          'font-size': '1.5rem'
+        }
+      }
+    )
+    try {
+      const reponse = await fetch(
+        `http://18.208.174.132:8080/api/caracteristicas/${id}`,
+        {
+          method: 'DELETE'
+        }
+      )
+      const data = await reponse.json()
+      toast.success('Caracteristica eliminada con exito.', { id: idToast })
+    } catch (error) {
+      toast.error('Tuvimos un problema al intentar borrar la categoria.', {
+        id: idToast
+      })
+    }
+
+    await getCaracteristicas()
+  }
   const [showmodal, setshowmodal] = useState(false)
 
   const openModal = () => {
@@ -42,14 +70,14 @@ export default function AdministrarCaracteristicas() {
               {caracteristicas.map(caracteristica => (
                 <tr key={caracteristica.id}>
                   <td>{caracteristica.id}</td>
-                  <td>{caracteristica.emoji + caracteristica.texto}</td>
+                  <td>{caracteristica.emoji + caracteristica.name}</td>
                   <td>
                     <BotonEditar>
                       <AiFillEdit />
                     </BotonEditar>
 
                     <BotonEliminar
-                      onClick={() => eliminarCaracteristica(caracteristica.id)}
+                      onClick={() => deleteCaracteristica(caracteristica.id)}
                     >
                       <AiFillDelete />
                     </BotonEliminar>

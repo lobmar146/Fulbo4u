@@ -1,4 +1,8 @@
-import { useContext, useState } from 'react'
+//calendario
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+
+import { useContext, useState, useRef } from 'react'
 import styled from 'styled-components'
 import { ElementosGlobales } from '../context/ElementosGlobales'
 import {
@@ -17,8 +21,27 @@ import logo from '../assets/Futbol4u-logo.svg'
 import toast, { Toaster } from 'react-hot-toast'
 
 export default function Home() {
+  //estado para useRef
+  const categoryProductsContainerRef = useRef(null)
+  const recommendationProductsContainerRef = useRef(null)
+  //estado que hace aparecer el buscador de fecha
+  const [buscarDisponibilidadFecha, setBuscarDisponibilidadFecha] =
+    useState(false)
+  const [buscarHorasDisponibles, setBuscarHorasDisponibles] = useState(false) //estado de la barra de busqueda
+  const [selectedHour, setSelectedHour] = useState('8:00 a 10 hs') //estado de la hora seleccionada
+  //estados de las barra de busqueda
+  const [highlightedIndex, setHighlightedIndex] = useState(-1) // Inicialmente no se resalta ningún elemento
+  const [panelAbierto, setPanelAbierto] = useState('panelCerrado') // Inicialmente el panel está cerrado
   const productsPerPage = 10
-  const { productos, productosAleatorios, user } = useContext(ElementosGlobales)
+
+  const {
+    productos,
+    productosAleatorios,
+    user,
+    categorias,
+    favorites,
+    cantFavorites
+  } = useContext(ElementosGlobales)
 
   const [currentPagerRecomendation, setCurrentPageRecomendation] = useState(1)
   const [currentPagerCategory, setCurrentPagerCategory] = useState(1)
@@ -29,16 +52,14 @@ export default function Home() {
     setFiltroCategoria(e.target.value)
     console.log(filtroCategoria)
   }
-
+  const categoriaSeleccionada = categorias.find(
+    categoria => categoria.name === filtroCategoria
+  )
   const productosFiltrados = productos.filter(producto => {
-    if (filtroCategoria === 'todos') {
-      return true // Mostrar todos los productos si se selecciona 'Todos'
-    } else if (filtroCategoria === 'pelotas') {
-      return producto.category === 1 // Filtrar por categoría 'Pelotas'
-    } else if (filtroCategoria === 'canchas') {
-      return producto.category === 2 // Filtrar por categoría 'Canchas'
-    } else if (filtroCategoria === 'clases') {
-      return producto.category === 3 // Filtrar por categoría 'Clases'
+    if (categoriaSeleccionada) {
+      return producto.category.id === categoriaSeleccionada.id
+    } else {
+      return true // No se aplican filtros si no hay categoría seleccionada
     }
   })
 
@@ -66,7 +87,16 @@ export default function Home() {
     ) {
       setCurrentPageRecomendation(currentPagerRecomendation + 1)
     }
+
+    // Mantén el scroll en la parte superior del contenedor de productos
+    if (recommendationProductsContainerRef.current) {
+      recommendationProductsContainerRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
   }
+
   const handlePageChangeCategory = direction => {
     if (direction === 'prev' && currentPagerCategory > 1) {
       setCurrentPagerCategory(currentPagerCategory - 1)
@@ -75,6 +105,14 @@ export default function Home() {
       indexOfLastProducCategory < productos.length
     ) {
       setCurrentPagerCategory(currentPagerCategory + 1)
+    }
+
+    // Mantén el scroll en la parte superior del contenedor de productos
+    if (categoryProductsContainerRef.current) {
+      categoryProductsContainerRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
     }
   }
 
@@ -112,9 +150,131 @@ export default function Home() {
 
   const totalProductsCategory = productosFiltrados.length
   const totalPagesCategory = Math.ceil(totalProductsCategory / productsPerPage)
+  // estados del buscador
+  const [searchText, setSearchText] = useState('')
+  const [selectedDate, setSelectedDate] = useState('')
+  const [suggestions, setSuggestions] = useState([])
+  // Fechas que deseas desactivar (en formato JavaScript Date)
+  const enabledDates = [
+    new Date('2023-09-05'),
+    new Date('2023-09-08'),
+    new Date('2023-09-15'),
+    new Date('2023-09-16'),
+    new Date('2023-09-23'),
+    new Date('2023-09-24')
+  ]
+
+  // Función para desactivar fechas
+
+  const isDateDisabled = date => {
+    const today = new Date()
+    enabledDates.push(today)
+    // Verifica si la fecha está en la lista de fechas desactivadas
+    return enabledDates.some(
+      disabledDate =>
+        date.getFullYear() === disabledDate.getFullYear() &&
+        date.getMonth() === disabledDate.getMonth() &&
+        date.getDate() === disabledDate.getDate()
+    )
+  }
+
+  //validar campo producto de la reservas
+  const validarProducto = () => {
+    //validar que el producto exista
+    if (searchText === '') {
+      toast.error(`Debe ingresar un producto para buscar fechas disponibles`, {
+        style: { 'font-size': '1.5rem' }
+      })
+    } else {
+      toast.success(
+        `Mostrando fechas disponibles para el elemento ${searchText}`
+      )
+      setBuscarDisponibilidadFecha(true)
+    }
+  }
+  const validarFecha = () => {
+    if (selectedDate === '') {
+      toast.error(`Debe seleccionar una fecha`, {
+        style: { 'font-size': '1.5rem' }
+      })
+    } else {
+      toast.success(
+        `Mostrando horarios disponibles para el día ${selectedDate} `,
+        {
+          style: { 'font-size': '1.5rem' }
+        }
+      )
+
+      setBuscarHorasDisponibles(true)
+    }
+  }
+  // Función para manejar cambios en el campo de búsqueda
+  // Función para manejar cambios en el campo de búsqueda
+  const handleSearchChange = e => {
+    const value = e.target.value
+    setSearchText(value)
+
+    // Filtrar productos que coincidan con el texto de búsqueda o mostrar todos si no hay búsqueda
+    const matchingProducts = value
+      ? productos.filter(product =>
+          product.name.toLowerCase().includes(value.toLowerCase())
+        )
+      : []
+    //abre o cierrra el panel segun si hay texto en la barrade busqueda
+
+    // Actualizar las sugerencias
+    setSuggestions(matchingProducts)
+    // Restablece la posición resaltada
+    setHighlightedIndex(-1)
+  }
+
+  const handleKeyDown = e => {
+    if (suggestions.length === 0) return
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault() // Evita el desplazamiento del cursor en el campo de entrada
+      setHighlightedIndex(prevIndex => {
+        const nextIndex =
+          prevIndex + 1 >= suggestions.length ? 0 : prevIndex + 1
+        setSearchText(suggestions[nextIndex].name) // Actualiza el searchText
+        return nextIndex
+      })
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault() // Evita el desplazamiento del cursor en el campo de entrada
+      setHighlightedIndex(prevIndex => {
+        const nextIndex =
+          prevIndex - 1 < 0 ? suggestions.length - 1 : prevIndex - 1
+        setSearchText(suggestions[nextIndex].name) // Actualiza el searchText
+        return nextIndex
+      })
+    } else if (e.key === 'Enter') {
+      // Aquí puedes manejar la selección del elemento resaltado
+      if (highlightedIndex !== -1) {
+        // Realiza alguna acción cuando se presiona Enter en un elemento resaltado
+        console.log(`Seleccionado: ${suggestions[highlightedIndex].name}`)
+        setSuggestions([])
+      }
+    }
+  }
+
+  const handleMouseEnter = index => {
+    // Resalta el elemento al pasar el mouse sobre él
+    setHighlightedIndex(index)
+  }
+
+  const handleMouseLeave = () => {
+    // Quita el resaltado al sacar el mouse de la lista
+    setHighlightedIndex(-1)
+  }
 
   return (
     <SectionHome>
+      <div className='title-container'>
+        <div className='titulo-categoria'>
+          <img src={logo} alt='logo futbol jugador' className='img-logo' />
+          <h2>Busca y reserva tu prodcuto</h2>
+        </div>
+      </div>
       {/* Section del buscador */}
       <section className='searcher'>
         {user && !user.emailVerified && (
@@ -132,15 +292,85 @@ export default function Home() {
         <SearchBar>
           <div className='search'>
             <AiOutlineSearch className='icon' />
-            <input type='text' />
+            <div className='buscar-fechas'>
+              <input
+                type='text'
+                value={searchText}
+                onChange={handleSearchChange}
+                onKeyDown={handleKeyDown}
+                alt='Buscador de productos'
+              />
+              <button onClick={() => validarProducto()} className='button'>
+                Ver disponibilidad
+              </button>
+            </div>
+            {suggestions.length > 0 && ( // Agrega esta condición
+              <ul className='suggestions'>
+                {suggestions.map((product, index) => (
+                  <li
+                    key={product.id}
+                    className={index === highlightedIndex ? 'highlighted' : ''}
+                    onMouseEnter={() => handleMouseEnter(index)}
+                    onMouseLeave={handleMouseLeave}
+                    onClick={() => {
+                      setSearchText(product.name)
+                      setSuggestions([])
+                    }}
+                  >
+                    <img
+                      width={30}
+                      src={`${product.images[0].url}`}
+                      alt='imagen de búsqueda de producto'
+                    />
+                    {product.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-          <div className='booker'>
-            <h4>Buscar Ciudad</h4>
-            <h4>Seleccionar Producto</h4>
-            <h4>Seleccionar Fecha</h4>
-            <h4>Seleccionar Hora</h4>
-            <h4 id='book-button'>Reservar</h4>
-          </div>
+          {buscarDisponibilidadFecha && (
+            <div className='booker'>
+              <label htmlFor='datePicker'>Selecciona una fecha:</label>
+              <DatePicker
+                id='datePicker'
+                selected={selectedDate}
+                onChange={date => setSelectedDate(date)}
+                filterDate={isDateDisabled} // Utiliza esta función para desactivar fechas
+              />
+              <button onClick={() => validarFecha()} className='button'>
+                {' '}
+                Buscar
+              </button>
+            </div>
+          )}
+          {buscarHorasDisponibles && (
+            <div className='booker'>
+              <label htmlFor='selectorHora'>Selecciona una hora:</label>
+              {/* //un seleect con las siguientes opciones : 08:00 a 10:00 hs,
+                  10:00 a 12:00 hs, 12:00 a 14:00 hs, 14:00 a 16:00 hs, 16:00 a
+                  18:00 hs, 18:00 a 20:00 hs */}
+              <select
+                value={selectedHour}
+                onChange={e => setSelectedHour(e.target.value)}
+              >
+                <option value='08:00 a 10:00 hs'>08:00 a 10:00 hs</option>
+                <option value='10:00 a 12:00 hs'>10:00 a 12:00 hs</option>
+                <option value='12:00 a 14:00 hs'>12:00 a 14:00 hs</option>
+                <option value='14:00 a 16:00 hs'>14:00 a 16:00 hs</option>
+                <option value='16:00 a 18:00 hs'>16:00 a 18:00 hs</option>
+              </select>
+              <button
+                onClick={() =>
+                  toast.success(
+                    `Reservando el producto ${searchText} para el día ${selectedDate} de ${selectedHour} `
+                  )
+                }
+                className='button'
+              >
+                Reservar
+              </button>
+            </div>
+          )}
         </SearchBar>
         {/* Banner pasa a ser parte del home */}
         <div className='banner'>
@@ -151,143 +381,200 @@ export default function Home() {
           </h2>
         </div>
       </section>
+      {console.log(productos.length)}
+      {productos.length === 0 || categorias.length === 0 ? (
+        <h1>Cargando...</h1>
+      ) : (
+        <>
+          {/* Seccion categorias */}
+          <section className='categories' ref={categoryProductsContainerRef}>
+            <div className='title-container'>
+              <div className='titulo-categoria'>
+                <img
+                  src={logo}
+                  alt='logo futbol jugador'
+                  className='img-logo'
+                />
+                <h2>Categorias</h2>
+              </div>
 
-      {/* Seccion categorias */}
-      <section className='categories'>
-        <div className='title-container'>
-          <div className='titulo-categoria'>
-            <img src={logo} alt='logo futbol jugador' className='img-logo' />
-            <h2>Categorias</h2>
-          </div>
+              <div className='filtro'>
+                {/* select con 3 opciones: pelotas, canchas y clases  */}
+                <BsFillFilterSquareFill />
+                <span>Ver</span>
+                <select
+                  className='select-categoria'
+                  name='categorias'
+                  id='categorias'
+                  onChange={filtroCategoriaChange}
+                  value={filtroCategoria}
+                >
+                  <option value='todos'>Todos</option>
+                  {categorias.map(categoria => (
+                    <option key={categoria.id} value={categoria.name}>
+                      {categoria.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className='products-container'>
+              {console.log(currentProductsCategory)}
 
-          <div className='filtro'>
-            {/* select con 3 opciones: pelotas, canchas y clases  */}
-            <BsFillFilterSquareFill />
-            <span>Ver</span>
-            <select
-              className='select-categoria'
-              name='categorias'
-              id='categorias'
-              onChange={filtroCategoriaChange}
-              value={filtroCategoria}
-            >
-              <option value='todos'>Todos</option>
-              <option value='pelotas'>Pelotas</option>
-              <option value='canchas'>Canchas</option>
-              <option value='clases'>Clases</option>
-            </select>
-          </div>
-        </div>
-        <div className='products-container'>
-          {console.log(currentProductsCategory)}
+              {currentProductsCategory.map(producto => (
+                <Product
+                  key={producto.id}
+                  id={producto.id}
+                  name={producto.name}
+                  shortDescription={producto.short_detail}
+                  image={producto.images[0].url}
+                  isFavorito={
+                    user && cantFavorites > 0
+                      ? favorites.some(
+                          favProductId => favProductId === producto.id
+                        )
+                      : false
+                  }
+                />
+              ))}
+            </div>
 
-          {currentProductsCategory.map(producto => (
-            <Product
-              key={producto.id}
-              id={producto.id}
-              name={producto.name}
-              shortDescription={producto.shortDescription}
-              image={producto.image[0]}
-            />
-          ))}
-        </div>
-        <div className='pagination'>
-          <button
-            className={currentPagerCategory === 1 ? 'disabled' : 'enabled'}
-            onClick={() => handlePageChangeCategory('prev')}
-            disabled={currentPagerCategory === 1}
+            <div className='pagination'>
+              <button
+                className={currentPagerCategory === 1 ? 'disabled' : 'enabled'}
+                onClick={() => handlePageChangeCategory('prev')}
+                disabled={currentPagerCategory === 1}
+              >
+                <AiOutlineArrowLeft></AiOutlineArrowLeft>
+              </button>
+              {generatePageNumbersCategory().map(pageNumber => (
+                <button
+                  key={pageNumber}
+                  className={
+                    (currentPagerCategory === pageNumber
+                      ? 'active'
+                      : 'enabled') + ' page-number'
+                  }
+                  onClick={() => {
+                    setCurrentPagerCategory(pageNumber)
+                    // Mantén el scroll en la parte superior del contenedor de productos
+                    if (categoryProductsContainerRef.current) {
+                      categoryProductsContainerRef.current.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                      })
+                    }
+                  }}
+                >
+                  {pageNumber}
+                </button>
+              ))}
+              <button
+                className={
+                  currentProductsCategory.length !== productsPerPage ||
+                  indexOfLastProducCategory >= productosFiltrados.length
+                    ? 'disabled'
+                    : 'enabled'
+                }
+                onClick={() => handlePageChangeCategory('next')}
+                disabled={
+                  currentProductsCategory.length !== productsPerPage ||
+                  indexOfLastProducCategory >= productosFiltrados.length
+                }
+              >
+                {' '}
+                <AiOutlineArrowRight></AiOutlineArrowRight>
+              </button>
+            </div>
+          </section>
+          {/* recomendaciones  */}
+          <section
+            className='recommendations'
+            ref={recommendationProductsContainerRef}
           >
-            <AiOutlineArrowLeft></AiOutlineArrowLeft>
-          </button>
-          {generatePageNumbersCategory().map(pageNumber => (
-            <button
-              key={pageNumber}
-              className={
-                (currentPagerCategory === pageNumber ? 'active' : 'enabled') +
-                ' page-number'
-              }
-              onClick={() => setCurrentPagerCategory(pageNumber)}
-            >
-              {pageNumber}
-            </button>
-          ))}
-          <button
-            className={
-              currentProductsCategory.length !== productsPerPage ||
-              indexOfLastProducCategory >= productosFiltrados.length
-                ? 'disabled'
-                : 'enabled'
-            }
-            onClick={() => handlePageChangeCategory('next')}
-            disabled={
-              currentProductsCategory.length !== productsPerPage ||
-              indexOfLastProducCategory >= productosFiltrados.length
-            }
-          >
-            {' '}
-            <AiOutlineArrowRight></AiOutlineArrowRight>
-          </button>
-        </div>
-      </section>
-      {/* recomendaciones  */}
-      <section className='recommendations'>
-        <div className='title-container'>
-          <div className='titulo-categoria'>
-            <img src={logo} alt='logo futbol jugador' className='img-logo' />
-            <h2>Recomendaciones</h2>
-          </div>
-        </div>
-        <div className='products-container'>
-          {console.log(currentProducts)}
-          {currentProducts.map(producto => (
-            <Product
-              key={producto.id}
-              id={producto.id}
-              name={producto.name}
-              shortDescription={producto.shortDescription}
-              image={producto.image[0]}
-            />
-          ))}
-        </div>
-        <div className='pagination'>
-          <button
-            className={currentPagerRecomendation === 1 ? 'disabled' : 'enabled'}
-            onClick={() => handlePageChangeRecomendation('prev')}
-            disabled={currentPagerRecomendation === 1}
-          >
-            <AiOutlineArrowLeft></AiOutlineArrowLeft>
-          </button>
-          {generatePageNumbersRecomendation().map(pageNumber => (
-            <button
-              key={pageNumber}
-              className={
-                (currentPagerRecomendation === pageNumber
-                  ? 'active'
-                  : 'enabled') + ' page-number'
-              }
-              onClick={() => setCurrentPageRecomendation(pageNumber)}
-            >
-              {pageNumber}
-            </button>
-          ))}
-          <button
-            className={
-              currentProducts.length !== productsPerPage ||
-              indexOfLastProductRecomendation >= productosAleatorios.length
-                ? 'disabled'
-                : 'enabled'
-            }
-            onClick={() => handlePageChangeRecomendation('next')}
-            disabled={
-              currentProducts.length !== productsPerPage ||
-              indexOfLastProductRecomendation >= productosAleatorios.length
-            }
-          >
-            {' '}
-            <AiOutlineArrowRight></AiOutlineArrowRight>
-          </button>
-        </div>
-      </section>
+            <div className='title-container'>
+              <div className='titulo-categoria'>
+                <img
+                  src={logo}
+                  alt='logo futbol jugador'
+                  className='img-logo'
+                />
+                <h2>Recomendaciones</h2>
+              </div>
+            </div>
+            <div className='products-container'>
+              {console.log(currentProducts)}
+              {currentProducts.map(producto => (
+                <Product
+                  key={producto.id}
+                  id={producto.id}
+                  name={producto.name}
+                  shortDescription={producto.short_detail}
+                  image={producto.images[0].url}
+                  isFavorito={
+                    user && cantFavorites > 0
+                      ? favorites.some(
+                          favProductId => favProductId === producto.id
+                        )
+                      : false
+                  }
+                />
+              ))}
+            </div>
+            <div className='pagination'>
+              <button
+                className={
+                  currentPagerRecomendation === 1 ? 'disabled' : 'enabled'
+                }
+                onClick={() => handlePageChangeRecomendation('prev')}
+                disabled={currentPagerRecomendation === 1}
+              >
+                <AiOutlineArrowLeft></AiOutlineArrowLeft>
+              </button>
+              {generatePageNumbersRecomendation().map(pageNumber => (
+                <button
+                  key={pageNumber}
+                  className={
+                    (currentPagerRecomendation === pageNumber
+                      ? 'active'
+                      : 'enabled') + ' page-number'
+                  }
+                  onClick={() => {
+                    if (recommendationProductsContainerRef.current) {
+                      console.log('efecto')
+                      recommendationProductsContainerRef.current.scrollIntoView(
+                        {
+                          behavior: 'smooth',
+                          block: 'start'
+                        }
+                      )
+                    }
+                    setCurrentPageRecomendation(pageNumber)
+                  }}
+                >
+                  {pageNumber}
+                </button>
+              ))}
+              <button
+                className={
+                  currentProducts.length !== productsPerPage ||
+                  indexOfLastProductRecomendation >= productosAleatorios.length
+                    ? 'disabled'
+                    : 'enabled'
+                }
+                onClick={() => handlePageChangeRecomendation('next')}
+                disabled={
+                  currentProducts.length !== productsPerPage ||
+                  indexOfLastProductRecomendation >= productosAleatorios.length
+                }
+              >
+                {' '}
+                <AiOutlineArrowRight></AiOutlineArrowRight>
+              </button>
+            </div>
+          </section>
+        </>
+      )}
       <Toaster position='top-center' reverseOrder={false} />
     </SectionHome>
   )
@@ -302,7 +589,48 @@ const SectionHome = styled.section`
     z-index: -1;
     width: 100%;
   }
+  .buscar-fechas {
+    display: flex;
+  }
+  .button {
+    font-size: 2rem;
+    border: white solid 1px;
 
+    font-size: 1rem;
+    padding: 8px;
+    color: white;
+    background-color: ${props => props.theme.global.greyF4u};
+    transition: color 0.6s;
+    border-radius: 2rem;
+    border: none;
+    cursor: pointer;
+  }
+  .suggestions {
+    position: absolute;
+    max-height: 200px; /* Establece la altura máxima deseada */
+    overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
+    border: 1px solid #ccc;
+    background-color: #e0e0e0;
+    width: 100%;
+    z-index: 1000; /* Asegúrate de que las sugerencias estén en la parte superior */
+    border-radius: 1rem;
+    border: 2px solid ${props => props.theme.global.greyF4u};
+  }
+  .suggestions li {
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: 0.6s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .suggestions li.highlighted {
+    color: white;
+    background-color: ${props => props.theme.global.greyF4u};
+    font-weight: bold; /* Cambia el estilo de fuente según tus preferencias */
+    /* Agrega cualquier otro estilo que desees para el elemento resaltado */
+  }
   .searcher {
     display: flex;
     justify-content: space-between;
@@ -315,6 +643,7 @@ const SectionHome = styled.section`
     background-position: center;
     height: 100vh;
     width: 100%;
+    gap: 0.5rem;
   }
 
   .search {
@@ -387,12 +716,14 @@ const SectionHome = styled.section`
   }
 
   .title-container {
-    background-color: ${props => props.theme.global.redF4u};
+    background-color: ${props => props.theme.global.greyF4u};
     display: flex;
     gap: 20px;
-    padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 4rem;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     .titulo-categoria {
       display: flex;
     }
@@ -544,12 +875,13 @@ const SectionHome = styled.section`
 
 const SearchBar = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
   padding-left: 2rem;
   padding-right: 2rem;
   flex-wrap: wrap;
+  gap: 0.5rem;
 `
 const VertifiqueSuCuenta = styled.p`
   color: white;

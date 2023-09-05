@@ -1,13 +1,28 @@
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { SectionAdministracion } from './Administracion'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { ElementosGlobales } from '../../context/ElementosGlobales'
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function ListarProductos() {
-  const { productos, eliminarProducto } = useContext(ElementosGlobales)
+  const { productos, getProductos } = useContext(ElementosGlobales)
 
+  //eliminar producto usando enpoint http://18.208.174.132:8080/api/productos/:id
+  async function deleteProducto(id) {
+    const idToast = toast.loading('Por favor espere... Borrando el producto', {
+      style: {
+        'font-size': '1.5rem'
+      }
+    })
+    await fetch(`http://18.208.174.132:8080/api/products/${id}`, {
+      method: 'DELETE'
+    })
+    toast.success('Producto eliminado con exito.', { id: idToast })
+
+    await getProductos()
+  }
   return (
     <SectionAdministracion className='section-ListarProductos'>
       {' '}
@@ -32,9 +47,7 @@ export default function ListarProductos() {
                       <AiFillEdit />
                     </BotonEditar>
 
-                    <BotonEliminar
-                      onClick={() => eliminarProducto(producto.id)}
-                    >
+                    <BotonEliminar onClick={() => deleteProducto(producto.id)}>
                       <AiFillDelete />
                     </BotonEliminar>
                   </td>
@@ -50,6 +63,7 @@ export default function ListarProductos() {
           sitio
         </h1>
       </div>
+      <Toaster position='top-center' reverseOrder={false} />
     </SectionAdministracion>
   )
 }

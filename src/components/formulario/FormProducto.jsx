@@ -4,11 +4,18 @@ import { ElementosGlobales } from '../../context/ElementosGlobales'
 import generarId from '../utils/autoId'
 import styled from 'styled-components'
 import toast, { Toaster } from 'react-hot-toast'
+import axios from 'axios'
 
 export default function FormProducto(props) {
   const { auxiliar } = props
-  const { productos, agregarProducto, caracteristicas, agregarCaracteristica } =
-    useContext(ElementosGlobales)
+  const {
+    productos,
+    agregarProducto,
+    caracteristicas,
+    agregarCaracteristica,
+    getProductos,
+    categorias
+  } = useContext(ElementosGlobales)
   const [nombre, setNombre] = useState('')
   const [shortDescripcion, setShortDescripcion] = useState('')
   const [descripcion, setDescripcion] = useState('')
@@ -32,14 +39,78 @@ export default function FormProducto(props) {
   const [selectedCaracteristicasIds, setSelectedCaracteristicasIds] = useState(
     []
   )
-
+  //estados de las politicas
+  const [politicasReserva, setPoliticasReserva] = useState('')
+  const [politicasCancelacion, setPoliticasCancelacion] = useState('')
+  const [politicassUsosyCuidados, setPoliticasUsosyCuidados] = useState('')
   //estados de los errores
   const [nombreError, setNombreError] = useState(false)
   const [shortDescripcionError, setShortDescripcionError] = useState(false)
   const [descripcionError, setDescripcionError] = useState(false)
   const [caracteristicasError, setCaracteristicasError] = useState(false)
   const [validationsPassed, setValidationsPassed] = useState(false)
+  const [politicaReservaError, setPoliticaReservaError] = useState(false)
+  const [politicaCancelacionError, setPoliticaCancelacionError] =
+    useState(false)
+  const [politicaUsosyCuidadosError, setPoliticaUsosyCuidadosError] =
+    useState(false)
+  async function postProduct() {
+    const idToast = toast.loading(`Agregando el Producto ${nombre}...`, {
+      style: {
+        'font-size': '1.5rem'
+      }
+    })
+    const url = 'http://18.208.174.132:8080/api/products/create-product'
+    console.log(galleryImagesFiles)
+    const formData = new FormData()
 
+    formData.append('name', nombre)
+    formData.append('short_detail', shortDescripcion)
+    formData.append('detail', descripcion)
+    formData.append('imageFiles', coverImageFile[0])
+
+    for (let i = 0; i < galleryImagesFiles.length; i++) {
+      formData.append('imageFiles', galleryImagesFiles[i]) // Agregar cada archivo de la galería uno por uno
+    }
+    formData.append('category', categoriaID)
+    formData.append('caracteristics', selectedCaracteristicasIds)
+
+    console.log(formData)
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data' // Asegúrate de establecer el tipo de contenido adecuado
+        }
+      })
+      console.log(response.data)
+      toast.success('¡Producto agregado correctamente', { id: idToast })
+      //llamo al get para mostrar nuevamente los productos.
+      getProductos()
+      //reiniciar a blanco todos los estados del formulario
+      setNombre('')
+      setShortDescripcion('')
+      setDescripcion('')
+      setCoverImageFile([])
+      setGalleryImagesFiles([])
+      setCoverImage(null)
+      setGalleryImages([])
+      setSelectedCaracteristicas([])
+      setSelectedCaracteristicasIds([])
+      setSelectedCaracteristicaId('')
+
+      console.log(nombre)
+
+      // Handle success or any further action
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error('Surgio el siguiente error agregando productos' + error.SC, {
+        id: idToast
+      })
+      // Handle error
+    }
+  }
+
+  //funciones que cambian estado del form
   const changeNombre = e => {
     setNombre(e.target.value)
   }
@@ -51,6 +122,7 @@ export default function FormProducto(props) {
   const changeShortDescripcion = e => {
     setShortDescripcion(e.target.value)
   }
+
   const handleGalleryImageChange = e => {
     const files = e.target.files
     setGalleryImagesFiles(files)
@@ -96,22 +168,22 @@ export default function FormProducto(props) {
   const handleCategoriaChange = e => {
     const selectedCategory = e.target.value
     setCategoria(selectedCategory)
+    const categoriaSeleccionada = categorias.find(
+      categoria => categoria.name === selectedCategory
+    )
+    console.log(categoriaSeleccionada.id)
+    setCategoriaId(categoriaSeleccionada.id)
+  }
 
-    switch (selectedCategory) {
-      case 'Pelota':
-        console.log('entro')
-        setCategoriaId('1')
-        break
-      case 'Cancha':
-        setCategoriaId('2')
-        break
-      case 'Clases':
-        setCategoriaId('3')
-        break
-      default:
-        setCategoriaId('1')
-        break
-    }
+  const handlePoliticasReservaChange = e => {
+    setPoliticasReserva(e.target.value)
+  }
+  const handlePoliticasCancelacionChange = e => {
+    setPoliticasCancelacion(e.target.value)
+  }
+
+  const handlePoliticasUsosyCuidadosChange = e => {
+    setPoliticasUsosyCuidados(e.target.value)
   }
 
   useEffect(() => {
@@ -152,6 +224,25 @@ export default function FormProducto(props) {
     } else {
       setgalleryImageError(false)
     }
+    if (politicasReserva === '') {
+      allValid = false
+      setPoliticaReservaError(true)
+    } else {
+      setPoliticaReservaError(false)
+    }
+    if (politicasCancelacion === '') {
+      allValid = false
+      setPoliticaCancelacionError(true)
+    } else {
+      setPoliticaCancelacionError(false)
+    }
+    if (politicassUsosyCuidados === '') {
+      allValid = false
+      setPoliticaUsosyCuidadosError(true)
+    } else {
+      setPoliticaUsosyCuidadosError(false)
+    }
+
     setValidationsPassed(allValid)
     console.log(productos)
   }, [
@@ -161,7 +252,10 @@ export default function FormProducto(props) {
     selectedCaracteristicas,
     coverImageFile,
     galleryImagesFiles,
-    productos
+    productos,
+    politicasReserva,
+    politicasCancelacion,
+    politicassUsosyCuidados
   ])
 
   //armado para en envio del json/post
@@ -173,23 +267,9 @@ export default function FormProducto(props) {
         'Surgieron uno mas errores al completar el formulario, por favor verifica todos los campos'
       )
     } else {
-      agregarProducto({
-        id: generarId(),
-        name: nombre,
-        shortDescription: shortDescripcion,
-        description: descripcion,
-        category: Number(categoriaID),
-        caracteristics: selectedCaracteristicasIds,
-
-        image: [coverImagePreview, ...galleryImagePreviews]
-      })
-      setNombre('')
-      setShortDescripcion('')
-      setDescripcion('')
-      toast.success('Producto agregado correctamente')
+      postProduct()
     }
   }
-
   // funciones de caracteristicas
   const addSelectedCaracteristica = () => {
     // Buscar la caracteristica seleccionada con el id en el array de caracteristicas
@@ -245,6 +325,7 @@ export default function FormProducto(props) {
           type='text'
           placeholder='Nombre del producto.'
           onChange={changeNombre}
+          value={nombre}
         />
         {/* mensaje de error */}
         {nombreError && (
@@ -259,6 +340,7 @@ export default function FormProducto(props) {
           type='text'
           placeholder='Descripción corta del producto.'
           onChange={changeShortDescripcion}
+          value={shortDescripcion}
         />
         {/* mensaje de error */}
         {shortDescripcionError && (
@@ -273,6 +355,7 @@ export default function FormProducto(props) {
           type='text'
           placeholder='Descripción del producto.'
           onChange={changeDescripcion}
+          value={descripcion}
         />
         {/* mensaje de error */}
         {descripcionError && (
@@ -286,9 +369,17 @@ export default function FormProducto(props) {
         {/* Seleccionar categoria */}
         <label>Seleccione la categoria del producto</label>
         <select value={categoria} onChange={handleCategoriaChange}>
-          <option value='Pelota'>Pelota</option>
-          <option value='Cancha'>Cancha</option>
-          <option value='Clases'>Clases</option>
+          {categorias.length === 0 && (
+            <option value='' disabled>
+              Cargando...
+            </option>
+          )}
+
+          {categorias.map(categoria => (
+            <option key={categoria.id} value={categoria.name}>
+              {categoria.name}
+            </option>
+          ))}
         </select>
       </ContenedorRecuadro>
 
@@ -303,12 +394,19 @@ export default function FormProducto(props) {
             value={selectedCaracteristicaId}
             onChange={e => setSelectedCaracteristicaId(e.target.value)}
           >
-            <option value='' disabled>
-              Elige una característica
-            </option>
+            {!caracteristicas ? (
+              <option value='' disabled>
+                Cargando...
+              </option>
+            ) : (
+              <option value='' disabled>
+                Elige una característica
+              </option>
+            )}
+
             {caracteristicas.map(caracteristica => (
               <option key={caracteristica.id} value={caracteristica.id}>
-                {caracteristica.emoji} {caracteristica.texto}
+                {caracteristica.emoji} {caracteristica.name}
               </option>
             ))}
           </select>
@@ -327,7 +425,7 @@ export default function FormProducto(props) {
           <SelectedCaracteristicasContainer>
             {selectedCaracteristicas.map(caracteristica => (
               <SelectedCaracteristica key={caracteristica.id}>
-                {caracteristica.emoji} {caracteristica.texto}
+                {caracteristica.emoji} {caracteristica.name}
                 <RemoveButton
                   onClick={() =>
                     removeSelectedCaracteristica(caracteristica.id)
@@ -400,6 +498,52 @@ export default function FormProducto(props) {
             </p>
           )}
         </Container>
+      </ContenedorRecuadro>
+
+      <h3>
+        <u>Politicas del Producto</u>
+      </h3>
+      <ContenedorRecuadro>
+        <label>Agregue las politicas de reserva</label>
+        <input
+          // value={politicasReserva}
+          type='text'
+          placeholder='Politicas de reserva.'
+          onChange={handlePoliticasReservaChange}
+        />
+        {/* mensaje de error */}
+        {politicaReservaError && (
+          <p className='requisitos-input'>
+            <span>Requisito:</span> Debes agregar las politicas de reserva
+          </p>
+        )}
+        <label>Agregue las politicas de cancelacion</label>
+        <input
+          type='text'
+          placeholder='Politicas de cancelacion.'
+          onChange={handlePoliticasCancelacionChange}
+          // value={politicasCancelacion}
+        />
+        {/* mensaje de error */}
+        {politicaCancelacionError && (
+          <p className='requisitos-input'>
+            <span>Requisito:</span> Debes agregar las politicas de cancelacion
+          </p>
+        )}
+        <label>Agregue las politicas de usos y cuidados</label>
+        <input
+          type='text'
+          placeholder='Politicas de usos y cuidados.'
+          onChange={handlePoliticasUsosyCuidadosChange}
+          // value={politicassUsosyCuidados}
+        />
+        {/* mensaje de error */}
+        {politicaUsosyCuidadosError && (
+          <p className='requisitos-input'>
+            <span>Requisito:</span> Debes agregar las politicas de usos y
+            cuidados
+          </p>
+        )}
       </ContenedorRecuadro>
       <button type='submit'>Agregar Producto</button>
       <Toaster position='top-center' reverseOrder={false} />

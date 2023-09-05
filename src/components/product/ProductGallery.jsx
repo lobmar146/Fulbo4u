@@ -190,7 +190,7 @@ const ProductGallery = ({ images }) => {
           <MainImage>
             <MainImageElement
               onClick={() => toggleCarousel(0)} // abrir carrousel con primera imagen
-              src={images[0]}
+              src={images[0].url}
               alt='Imagen principal del producto'
             />
           </MainImage>
@@ -199,7 +199,7 @@ const ProductGallery = ({ images }) => {
               {images.slice(1).map((image, index) => (
                 <SecondaryImageElement
                   key={index}
-                  src={image}
+                  src={image.url}
                   alt={`Imagen secundaria ${index + 1}`}
                   onClick={() => toggleCarousel(index + 1)} // Abrir carrousel con la imagen que queremos
                 />
@@ -214,7 +214,7 @@ const ProductGallery = ({ images }) => {
                 >
                   {images.map((image, index) => (
                     <div key={index}>
-                      <img src={image} alt={`Imagen ${index}`} />
+                      <img src={image.url} alt={`Imagen ${index}`} />
                     </div>
                   ))}
                 </StyledCarousel>
