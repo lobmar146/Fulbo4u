@@ -13,6 +13,8 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import toast, { Toaster } from 'react-hot-toast'
 
+import { FacebookShareButton } from 'react-share'
+
 // helmet para agregar los metadatos a la hora de compartir
 import { Helmet } from 'react-helmet'
 
@@ -97,7 +99,9 @@ export default function DetailProduct() {
           <Helmet>
             <meta property='og:title' content={productoPorId.name} />
             <meta property='og:description' content={productoPorId.detail} />
-            <meta property='og:image' content={productoPorId.images[0].url} />
+            {productoPorId.images && productoPorId.images[0] && (
+              <meta property='og:image' content={productoPorId.images[0].url} />
+            )}{' '}
           </Helmet>
           <div className='title-container'>
             <div className='titulo-categoria'>
@@ -121,6 +125,12 @@ export default function DetailProduct() {
               Comparti este producto:{' '}
             </h3>
             <div className='compartir-redes'>
+              <FacebookShareButton
+                url={`http://g4-c5-fulbo4u.s3-website.us-east-2.amazonaws.com/`}
+                quote={'probando prbando'}
+              >
+                <button>Compartir en Facebook</button>
+              </FacebookShareButton>
               <SocialShareLink
                 href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
                 target='_blank'
