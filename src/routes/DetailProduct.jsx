@@ -16,7 +16,7 @@ import toast, { Toaster } from 'react-hot-toast'
 
 // helmet para agregar los metadatos a la hora de compartir
 import { Helmet } from 'react-helmet'
-import WhatsAppButton from '../components/whatsapp/Whatsappbutton'
+import WhatsAppButton from '../components/whatsapp/WhatsAppButton'
 import { useNavigate } from 'react-router-dom'
 import { utcToZonedTime, format } from 'date-fns-tz' // Importa la función de manejo de zona horaria y la función de formato
 import { addDays } from 'date-fns'
