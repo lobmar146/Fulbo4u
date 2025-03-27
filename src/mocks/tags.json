@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "emoji": "♿",
+    "texto": "Instalacion accesible"
+  },
+  {
+    "id": 2,
+    "emoji": "🌄",
+    "texto": "Escenarios al aire libre para jugar"
+  },
+  {
+    "id": 3,
+    "emoji": "🏟️",
+    "texto": "Cancha indoor moderna"
+  },
+  {
+    "id": 4,
+    "emoji": "🏃‍♂️",
+    "texto": "Entrenamientos intensivos"
+  },
+  {
+    "id": 5,
+    "emoji": "⚠️",
+    "texto": "Producto de baja calidad"
+  },
+  {
+    "id": 6,
+    "emoji": "🔄",
+    "texto": "Equilibrio entre costo y calidad"
+  },
+  {
+    "id": 7,
+    "emoji": "🌼",
+    "texto": "Producto de calidad mediana"
+  },
+  {
+    "id": 8,
+    "emoji": "🌟",
+    "texto": "Producto de alta calidad"
+  }
+]

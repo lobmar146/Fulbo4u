@@ -1,0 +1,32 @@
+[
+  {
+    "idReserva": 1,
+    "idProducto": 257,
+    "uidProducto": "sfEBEhT6Q0Zs4bJb8pTbaXc6hDo1",
+    "nombreInfo": "Martín Lobos",
+    "telefonoInfo": "569 9876 5432",
+    "emailInfo": "lobmar146@gmail.com",
+    "fechaReserva": "15-09-2023",
+    "horaReserva": "15:00"
+  },
+  {
+    "idReserva": 2,
+    "idProducto": 259,
+    "uidProducto": "sfEBEhT6Q0Zs4bJb8pTbaXc6hDo2",
+    "nombreInfo": "Kevin Lobos",
+    "telefonoInfo": "569 9213123876 5432",
+    "emailInfo": "kevin@gmail.com",
+    "fechaReserva": "16-09-2023",
+    "horaReserva": "17:00"
+  },
+  {
+    "idReserva": 3,
+    "idProducto": 260,
+    "uidProducto": "sfEBEhT6Q0Zs4bJb8pTbaXc6hDo3",
+    "nombreInfo": "Te odio aBY",
+    "telefonoInfo": "569 9876 5432",
+    "emailInfo": "umpalumpa@gmail.com",
+    "fechaReserva": "18-09-2023",
+    "horaReserva": "19:00"
+  }
+]

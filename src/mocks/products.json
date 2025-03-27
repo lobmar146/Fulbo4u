@@ -1,0 +1,304 @@
+[
+  {
+    "id": 1,
+    "name": "Pelota de Tango que no quería ser pateada",
+    "shortDescription": "Una pelota caprichosa que desafiaba los disparos",
+    "description": "En un día soleado en Buenos Aires, durante un partido amistoso, esta pelota de Tango demostró tener una personalidad propia. Cada vez que un jugador se acercaba para patearla, la pelota hacía un giro evasivo o saltaba en el aire, esquivando todos los intentos de gol. Los jugadores y el público no pudieron contener la risa ante esta situación surrealista. Finalmente, un delantero astuto se acercó sigilosamente y le susurró palabras de aliento antes de patearla suavemente al gol, dejando a todos boquiabiertos.",
+    "image": [
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png"
+    ],
+    "category": 1,
+    "caracteristics": [1, 3, 7]
+  },
+  {
+    "id": 2,
+    "name": "Cancha 'Resbaladiza' en días de lluvia",
+    "shortDescription": "Una cancha que desafía la gravedad en días de lluvia",
+    "description": "En un estadio argentino famoso por su ambiente eléctrico, ocurrió algo inesperado en un día lluvioso. La cancha parecía tener una inclinación resbaladiza, haciendo que los jugadores parecieran patinadores sobre hielo. Cada carrera, giro y regate se convirtieron en momentos cómicos mientras los jugadores luchaban por mantener el equilibrio. Aunque el partido terminó en empate, los aficionados siempre recordarán la 'cancha resbaladiza' con una sonrisa.",
+    "image": [
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png"
+    ],
+    "category": 2,
+    "caracteristics": [2, 5, 6]
+  },
+  {
+    "id": 3,
+    "name": "Clases de Fútbol con el 'Maestro' Payaso",
+    "shortDescription": "Lecciones de fútbol divertidas con un toque cómico",
+    "description": "Un exjugador argentino famoso por su talento en el campo decidió impartir clases de fútbol con un giro cómico. Vestido como un payaso, el 'Maestro' Payaso enseñaba técnicas de fútbol mientras hacía chistes y payasadas. Los estudiantes se reían tanto que a veces olvidaban que estaban en una clase de fútbol. Aunque el enfoque era divertido, los consejos del 'Maestro' resultaron ser muy valiosos para los futbolistas en formación.",
+
+    "image": [
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png"
+    ],
+
+    "category": 3,
+    "caracteristics": [1, 4, 8]
+  },
+  {
+    "id": 4,
+    "name": "Pelota Autografiada por Jugadores Desconocidos",
+    "shortDescription": "Una pelota llena de firmas ilegibles",
+    "description": "Durante un evento de caridad en Argentina, se organizó una subasta de una pelota autografiada por jugadores anónimos. La única complicación era que las firmas eran tan ilegibles que nadie podía descifrar quiénes eran los jugadores que habían firmado. Esto generó un misterio divertido y desconcertante entre los fanáticos, quienes trataban de adivinar las identidades mientras pujaban por la pelota.",
+    "image": [
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png"
+    ],
+    "category": 1,
+    "caracteristics": [2, 4, 7]
+  },
+  {
+    "id": 5,
+    "name": "Cancha 'Laberinto' de Medio Tiempo",
+    "shortDescription": "Una cancha que se convierte en laberinto en el medio tiempo",
+    "description": "En un estadio en Argentina, los trabajadores decidieron probar algo único durante el medio tiempo. Transformaron el campo en un laberinto complicado usando cintas de marcaje. Los fanáticos y los jugadores participaron en una emocionante carrera para encontrar la salida, lo que provocó risas y emoción en igual medida. Al final, todos compartieron anécdotas divertidas sobre cómo se perdieron o encontraron el camino.",
+    "image": [
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png"
+    ],
+    "category": 2,
+    "caracteristics": [3, 5, 8]
+  },
+  {
+    "id": 6,
+    "name": "Clases de Fútbol 'Bailarín'",
+    "shortDescription": "Lecciones de fútbol con ritmo y movimiento",
+    "description": "Un instructor de fútbol argentino decidió incorporar música y baile en sus clases. Los estudiantes practicaban regates y tiros al ritmo de la música, creando un ambiente festivo en el campo. Incluso los entrenadores rivales se unieron a la diversión, compitiendo en duelos de baile improvisados antes de los partidos. Estas clases únicas demostraron que el fútbol y el baile pueden ir de la mano.",
+    "image": [
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png"
+    ],
+    "category": 3,
+    "caracteristics": [2, 6, 7]
+  },
+  {
+    "id": 7,
+    "name": "Pelota 'Hinchable' que sorprendió a todos",
+    "shortDescription": "Una pelota que se infla cada vez que se golpea",
+    "description": "En una liga local argentina, un partido se volvió hilarante cuando la pelota comenzó a inflarse cada vez que un jugador la pateaba con fuerza. Los jugadores tenían que adaptarse a la impredecible 'pelota hinchable', lo que resultó en tiros que volaban por encima del arco y regates torpes. Aunque el partido se volvió más un espectáculo cómico que una competencia seria, todos disfrutaron de la experiencia única.",
+    "image": [
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png"
+    ],
+    "category": 1,
+    "caracteristics": [1, 5, 8]
+  },
+  {
+    "id": 8,
+    "name": "Cancha 'Resorte' que desafía la gravedad",
+    "shortDescription": "Una cancha que hace que los jugadores salten más alto",
+    "description": "En un torneo juvenil argentino, los organizadores decidieron sorprender a los jugadores al instalar una cancha con superficie de resorte. Cada vez que la pelota tocaba el suelo, los jugadores rebotaban inesperadamente en el aire, lo que resultaba en cabezazos elevados y giros acrobáticos. Aunque el control del balón era complicado, los jugadores se divirtieron como nunca y exhibieron una creatividad increíble.",
+    "image": [
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png"
+    ],
+    "category": 2,
+    "caracteristics": [3, 4, 6]
+  },
+  {
+    "id": 9,
+    "name": "Clases de Fútbol 'Sueño del Abuelo'",
+    "shortDescription": "Lecciones de fútbol al estilo antiguo",
+    "description": "Un exjugador veterano argentino decidió revivir los métodos de entrenamiento de su época en las clases de fútbol. Los estudiantes se encontraron practicando con balones pesados y entrenamientos rigurosos, al estilo de las viejas leyendas del fútbol. A pesar de la dificultad, todos reconocieron el valor de los métodos clásicos y aprendieron lecciones de perseverancia y dedicación.",
+    "image": [
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png"
+    ],
+    "category": 3,
+    "caracteristics": [1, 7, 8]
+  },
+  {
+    "id": 10,
+    "name": "Pelota 'Escurridiza' que desafiaba las manos de los porteros",
+    "shortDescription": "Una pelota que parecía deslizarse entre las manos de los porteros",
+    "description": "En una liga local, una pelota inusualmente resbaladiza se convirtió en un desafío para los porteros. Cada intento de atraparla resultaba en un movimiento torpe, lo que generaba risas entre los jugadores y la audiencia. Los porteros, en lugar de frustrarse, comenzaron a celebrar cada vez que lograban atrapar la pelota, convirtiendo los errores en momentos de diversión compartida.",
+    "image": [
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png"
+    ],
+    "category": 1,
+    "caracteristics": [2, 3, 5]
+  },
+  {
+    "id": 11,
+    "name": "Cancha 'Desafío del Viento' en días ventosos",
+    "shortDescription": "Una cancha donde el viento es el jugador invisible",
+    "description": "En una región ventosa de Argentina, un partido se llevó a cabo en una cancha donde el viento tenía un papel fundamental. Los tiros y pases se volvieron impredecibles, ya que el viento cambiante afectaba la dirección de la pelota. Los jugadores se vieron obligados a calcular el viento en cada movimiento, lo que resultó en momentos cómicos de sorpresa y frustración.",
+    "image": [
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png"
+    ],
+    "category": 2,
+    "caracteristics": [1, 6, 7]
+  },
+  {
+    "id": 12,
+    "name": "Clases de Fútbol 'Actuación Teatral'",
+    "shortDescription": "Lecciones de fútbol con dramatización y exageración",
+    "description": "Un grupo de entrenadores argentinos decidió dar un giro dramático a las clases de fútbol. Los estudiantes practicaban regates y tiros exagerados, cayendo al suelo de manera dramática en cada choque imaginario. Aunque al principio parecía una broma, estas lecciones ayudaron a los jugadores jóvenes a perfeccionar sus habilidades de actuación y a mejorar su juego limpio.",
+    "image": [
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png"
+    ],
+    "category": 3,
+    "caracteristics": [4, 5, 8]
+  },
+  {
+    "id": 13,
+    "name": "Pelota 'Teletransportadora' que desafía la lógica",
+    "shortDescription": "Una pelota que parecía cambiar de lugar mágicamente",
+    "description": "En un partido amistoso, la pelota que se usó parecía tener poderes teletransportadores. En varias ocasiones, la pelota parecía moverse mágicamente de un lugar a otro, desconcertando a los jugadores y espectadores por igual. Los jugadores intentaban predecir la dirección incorrecta, lo que llevaba a escenas cómicas de caos y sorpresa en el campo.",
+    "image": [
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png"
+    ],
+    "category": 1,
+    "caracteristics": [2, 6, 7]
+  },
+  {
+    "id": 14,
+    "name": "Cancha 'Resorte Extremo' para saltos acrobáticos",
+    "shortDescription": "Una cancha que desafía la gravedad con saltos impresionantes",
+    "description": "En un evento de exhibición en Argentina, se instaló una cancha con superficie de resorte extremo. Los jugadores, ansiosos por impresionar a la multitud, comenzaron a realizar saltos acrobáticos y giros inimaginables. Aunque el control del balón era complicado en el aire, la audiencia aplaudía y se reía ante cada salto extravagante y aterrizaje torpe.",
+    "image": [
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png"
+    ],
+    "category": 2,
+    "caracteristics": [3, 4, 7]
+  },
+  {
+    "id": 15,
+    "name": "Clases de Fútbol 'Modo Ciego'",
+    "shortDescription": "Lecciones de fútbol sin mirar el balón",
+    "description": "Un instructor de fútbol argentino decidió desafiar a sus estudiantes con lecciones únicas. Durante las prácticas, los jugadores tenían que jugar sin mirar el balón, confiando en sus sentidos y la comunicación con sus compañeros. Aunque al principio fue caótico, los jugadores comenzaron a mejorar su conciencia espacial y su habilidad para anticipar el juego.",
+    "image": [
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png"
+    ],
+    "category": 3,
+    "caracteristics": [1, 5, 6]
+  },
+  {
+    "id": 16,
+    "name": "Pelota 'Danzante' que seguía el ritmo de la música",
+    "shortDescription": "Una pelota que parecía bailar al compás de la música",
+    "description": "En un evento benéfico en Argentina, se usó una pelota especial que vibraba y rebotaba al ritmo de la música en el estadio. Los jugadores intentaban coordinar sus movimientos con los movimientos de la pelota, lo que generaba momentos cómicos de sincronización y desincronización. La audiencia se unió a la diversión, aplaudiendo y bailando en las gradas.",
+    "image": [
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png"
+    ],
+    "category": 1,
+    "caracteristics": [2, 3, 7]
+  },
+  {
+    "id": 17,
+    "name": "Cancha 'Espejismo' que jugaba con la percepción",
+    "shortDescription": "Una cancha que engañaba a los jugadores con ilusiones ópticas",
+    "description": "En un torneo amistoso, una cancha se diseñó con patrones en el césped que generaban ilusiones ópticas. Los jugadores se veían multiplicados o parecían cambiar de tamaño, lo que llevaba a momentos de confusión y risas. Los jugadores se reían al ver cómo su percepción los engañaba, convirtiendo el partido en un espectáculo entretenido.",
+    "image": [
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png"
+    ],
+    "category": 2,
+    "caracteristics": [1, 6, 8]
+  },
+  {
+    "id": 18,
+    "name": "Clases de Fútbol 'Maratón de Risas'",
+    "shortDescription": "Lecciones de fútbol con juegos y bromas",
+    "description": "Un grupo de entrenadores argentinos decidió dar un giro humorístico a las clases de fútbol. Los estudiantes participaban en juegos y desafíos cómicos, como regatear con un zapato en la cabeza o hacer pases mientras sostenían una cuchara en la boca. Aunque la risa era el objetivo principal, los jugadores también mejoraron sus habilidades mientras se divertían.",
+    "image": [
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png",
+      "/clases.png"
+    ],
+    "category": 3,
+    "caracteristics": [2, 4, 5]
+  },
+  {
+    "id": 19,
+    "name": "Pelota 'Invisible' que generaba confusión",
+    "shortDescription": "Una pelota que parecía desaparecer mágicamente",
+    "description": "En un día soleado en Argentina, una pelota de fútbol tomó el centro de atención por su aparente capacidad de desaparecer en ciertos momentos. Los jugadores y los espectadores se desconcertaban cuando la pelota parecía desvanecerse durante los tiros o pases, lo que generaba situaciones hilarantes de confusión en el campo.",
+    "image": [
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png",
+      "/pelota.png"
+    ],
+    "category": 1,
+    "caracteristics": [1, 3, 6]
+  },
+  {
+    "id": 20,
+    "name": "Cancha 'Pista de Obstáculos' para regates creativos",
+    "shortDescription": "Una cancha con obstáculos desafiantes para regates",
+    "description": "En un torneo juvenil en Argentina, se construyó una cancha con obstáculos creativos como conos gigantes y barriles. Los jugadores tenían que sortear los obstáculos mientras regateaban, lo que resultaba en movimientos extravagantes y regates inesperados. La audiencia aplaudía y reía ante cada intento de superar los obstáculos de manera elegante.",
+    "image": [
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png",
+      "/cancha.png"
+    ],
+    "category": 2,
+    "caracteristics": [2, 7, 8]
+  }
+]
