@@ -21,7 +21,7 @@ import logo from '../assets/Futbol4u-logo.svg'
 
 import toast, { Toaster } from 'react-hot-toast'
 import TextToSpeachButton from '../components/accesibilidad/TextToSpeechButton'
-import WhatsAppButton from '../components/whatsapp/Whatsappbutton'
+import WhatsAppButton from '../components/whatsapp/WhatsAppButton'
 import { useNavigate } from 'react-router-dom'
 
 export default function Home() {
@@ -631,7 +631,7 @@ export default function Home() {
           </section>
         </>
       )}
-      <WhatsAppButton phoneNumber='5491127164470' />
+      <WhatsAppButton phoneNumber='5492954599330' />
       <Toaster position='top-center' reverseOrder={false} />
     </SectionHome>
   )
